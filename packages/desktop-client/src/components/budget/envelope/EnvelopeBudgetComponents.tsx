@@ -22,6 +22,7 @@ import { NotesButton } from '#components/NotesButton';
 import { CellValue, CellValueText } from '#components/spreadsheet/CellValue';
 import { Field, Row, SheetCell } from '#components/table';
 import type { SheetCellProps } from '#components/table';
+import { AvailablePill } from '#fork/AvailablePill';
 import { useCategoryScheduleGoalTemplateIndicator } from '#hooks/useCategoryScheduleGoalTemplateIndicator';
 import { useFormat } from '#hooks/useFormat';
 import { useNavigate } from '#hooks/useNavigate';
@@ -517,7 +518,7 @@ export const ExpenseCategoryMonth = memo(function ExpenseCategoryMonth({
             padding: 0,
           }}
         >
-          <BalanceWithCarryover
+          <AvailablePill
             carryover={envelopeBudget.catCarryover(category.id)}
             balance={envelopeBudget.catBalance(category.id)}
             goal={envelopeBudget.catGoal(category.id)}

@@ -103,9 +103,12 @@ function renderBalance({
 } = {}) {
   const client = createTestQueryClient();
   const store = configureTestAppStore({ queryClient: client });
-  if (isGoalTemplatesEnabled) {
-    store.dispatch(mergeSyncedPrefs({ 'flags.goalTemplatesEnabled': 'true' }));
-  }
+  // Fork: goal templates default to on, so the flag is always set explicitly
+  store.dispatch(
+    mergeSyncedPrefs({
+      'flags.goalTemplatesEnabled': String(!!isGoalTemplatesEnabled),
+    }),
+  );
   store.dispatch(mergeSyncedPrefs({ budgetType }));
   if (hideFraction) {
     setNumberFormat({ format: 'comma-dot', hideFraction: true });

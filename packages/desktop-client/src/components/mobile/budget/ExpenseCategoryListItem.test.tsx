@@ -76,7 +76,8 @@ describe('ExpenseCategoryListItem', () => {
 
     await userEvent.click(
       await screen.findByRole('button', {
-        name: 'Open balance menu for Groceries category',
+        // Fork: the pill appends its state to the label
+        name: /^Open balance menu for Groceries category/,
       }),
     );
 

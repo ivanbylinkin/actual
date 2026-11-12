@@ -131,6 +131,44 @@ export const colors = {
   toBudgetZero: { all: { ref: 'numberPositive' } },
   toBudgetNegative: { all: { ref: 'budgetNumberNegative' } },
 
+  // Fork: filled pills behind a category's available balance
+  availableFundedBackground: {
+    light: 'green150',
+    dark: 'green800',
+    midnight: 'green800',
+  },
+  availableFundedText: {
+    light: 'green900',
+    dark: 'green150',
+    midnight: 'green150',
+  },
+  availableUnderfundedBackground: {
+    light: 'orange200',
+    dark: 'orange800',
+    midnight: 'orange800',
+  },
+  availableUnderfundedText: {
+    light: 'orange900',
+    dark: 'orange150',
+    midnight: 'orange150',
+  },
+  availableOverspentBackground: {
+    light: 'red150',
+    dark: 'red800',
+    midnight: 'red800',
+  },
+  availableOverspentText: {
+    light: 'red800',
+    dark: 'red100',
+    midnight: 'red100',
+  },
+  availableZeroBackground: {
+    light: 'navy100',
+    dark: 'navy700',
+    midnight: 'gray600',
+  },
+  availableZeroText: { light: 'navy600', dark: 'navy200', midnight: 'gray200' },
+
   sidebarBackground: { light: 'navy900', dark: 'navy900', midnight: 'gray900' },
   sidebarItemBackgroundPending: { all: 'orange200' },
   sidebarItemBackgroundPositive: {

@@ -147,7 +147,8 @@ describe('Tracking budget income category goal', () => {
 });
 
 describe('Tracking budget expense category goal', () => {
-  it('keeps the ring on the balance, not the spent amount', async () => {
+  // Fork: the balance is a pill, so the underfunded mark is its state
+  it('marks the balance as underfunded, not the spent amount', async () => {
     sheetValues = {
       'goal-groceries': 65000,
       'budget-groceries': 40000,
@@ -159,9 +160,7 @@ describe('Tracking budget expense category goal', () => {
       within(screen.getByTestId('category-month-spent')).queryByRole('img'),
     ).toBeNull();
     expect(
-      within(screen.getByTestId('balance')).getByRole('img', {
-        name: 'Underfunded, 61% of goal',
-      }),
-    ).toBeInTheDocument();
+      within(screen.getByTestId('balance')).getByTitle('Target underfunded'),
+    ).toHaveAttribute('data-available-state', 'underfunded');
   });
 });

@@ -15,6 +15,7 @@ import * as monthUtils from '@actual-app/core/shared/months';
 import type { IntegerAmount } from '@actual-app/core/shared/util';
 import type { CategoryEntity } from '@actual-app/core/types/models';
 
+import { MobileAvailablePill } from '#fork/MobileAvailablePill';
 import { useCategoriesById } from '#hooks/useCategories';
 import { useFormat } from '#hooks/useFormat';
 import { useNavigate } from '#hooks/useNavigate';
@@ -25,7 +26,6 @@ import { collapseModals, pushModal } from '#modals/modalsSlice';
 import { useDispatch } from '#redux';
 import { envelopeBudget, trackingBudget } from '#spreadsheet/bindings';
 
-import { BalanceCell } from './BalanceCell';
 import { BudgetCell } from './BudgetCell';
 import { getColumnWidth, ROW_HEIGHT } from './BudgetTable';
 import { SpentCell } from './SpentCell';
@@ -137,11 +137,6 @@ function ExpenseCategoryCells({
       ? trackingBudget.catSumAmount(category.id)
       : envelopeBudget.catSumAmount(category.id);
 
-  const balance =
-    budgetType === 'tracking'
-      ? trackingBudget.catBalance(category.id)
-      : envelopeBudget.catBalance(category.id);
-
   return (
     <View
       style={{
@@ -189,8 +184,7 @@ function ExpenseCategoryCells({
           alignItems: 'flex-end',
         }}
       >
-        <BalanceCell
-          binding={balance}
+        <MobileAvailablePill
           category={category}
           show3Columns={show3Columns}
           onPress={onOpenBalanceMenu}
