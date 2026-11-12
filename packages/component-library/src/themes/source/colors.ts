@@ -131,7 +131,58 @@ export const colors = {
   toBudgetZero: { all: { ref: 'numberPositive' } },
   toBudgetNegative: { all: { ref: 'budgetNumberNegative' } },
 
-  sidebarBackground: { light: 'navy900', dark: 'navy900', midnight: 'gray900' },
+  // Fork: filled pills behind a category's available balance
+  availableFundedBackground: {
+    light: 'green200',
+    dark: 'green800',
+    midnight: 'green800',
+  },
+  availableFundedText: {
+    light: 'green900',
+    dark: 'green150',
+    midnight: 'green150',
+  },
+  availableUnderfundedBackground: {
+    light: 'orange400',
+    dark: 'orange800',
+    midnight: 'orange800',
+  },
+  availableUnderfundedText: {
+    light: 'orange900',
+    dark: 'orange150',
+    midnight: 'orange150',
+  },
+  availableOverspentBackground: {
+    light: 'red150',
+    dark: 'red800',
+    midnight: 'red800',
+  },
+  availableOverspentText: {
+    light: 'red800',
+    dark: 'red100',
+    midnight: 'red100',
+  },
+  availableZeroBackground: {
+    light: 'navy100',
+    dark: 'navy700',
+    midnight: 'gray600',
+  },
+  availableZeroText: { light: 'navy600', dark: 'navy200', midnight: 'gray200' },
+
+  // Fork: the Ready to Assign banner follows the pill colours by default
+  readyToAssignPositiveBackground: {
+    all: { ref: 'availableFundedBackground' },
+  },
+  readyToAssignPositiveText: { all: { ref: 'availableFundedText' } },
+  readyToAssignNegativeBackground: {
+    all: { ref: 'availableOverspentBackground' },
+  },
+  readyToAssignNegativeText: { all: { ref: 'availableOverspentText' } },
+  readyToAssignZeroBackground: { all: { ref: 'availableZeroBackground' } },
+  readyToAssignZeroText: { all: { ref: 'availableZeroText' } },
+
+  // Fork: dark indigo sidebar in every theme (upstream: navy / near-black)
+  sidebarBackground: { all: 'purple900' },
   sidebarItemBackgroundPending: { all: 'orange200' },
   sidebarItemBackgroundPositive: {
     light: 'green500',
@@ -139,11 +190,7 @@ export const colors = {
     midnight: 'green400',
   },
   sidebarItemBackgroundFailed: { all: 'red300' },
-  sidebarItemBackgroundHover: {
-    light: 'navy800',
-    dark: 'navy700',
-    midnight: 'gray700',
-  },
+  sidebarItemBackgroundHover: { all: 'purple800' },
   sidebarItemAccentSelected: { all: 'purple200' },
   sidebarItemBackgroundSelected: {
     light: {

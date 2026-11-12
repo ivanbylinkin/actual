@@ -8,10 +8,10 @@ import { CoverMenu } from '#components/budget/envelope/CoverMenu';
 import { useEnvelopeSheetValue } from '#components/budget/envelope/EnvelopeBudgetComponents';
 import { HoldMenu } from '#components/budget/envelope/HoldMenu';
 import { TransferMenu } from '#components/budget/envelope/TransferMenu';
+import { ReadyToAssignBanner } from '#fork/ReadyToAssignBanner';
 import { useFormat } from '#hooks/useFormat';
 import { envelopeBudget } from '#spreadsheet/bindings';
 
-import { ToBudgetAmount } from './ToBudgetAmount';
 import { ToBudgetMenu } from './ToBudgetMenu';
 
 type ToBudgetProps = {
@@ -75,7 +75,8 @@ export function ToBudget({
   return (
     <>
       <View ref={triggerRef}>
-        <ToBudgetAmount
+        <ReadyToAssignBanner
+          isCompact={isCollapsed}
           onClick={() => {
             resetPosition();
             setMenuOpen(true);

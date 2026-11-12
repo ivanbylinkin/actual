@@ -27,11 +27,11 @@ export function addToBeBudgetedGroup(groups: CategoryGroupEntity[]) {
   return [
     {
       id: 'to-budget',
-      name: t('To Budget'),
+      name: t('Ready to Assign'),
       categories: [
         {
           id: 'to-budget',
-          name: t('To Budget'),
+          name: t('Ready to Assign'),
           group: 'to-budget',
         },
       ],

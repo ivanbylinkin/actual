@@ -486,6 +486,16 @@ export type Modal =
       };
     }
   | {
+      // Fork: the mobile category inspector sheet
+      name: 'category-inspector';
+      options: {
+        categoryId: CategoryEntity['id'];
+        month: string;
+        onBudgetAction: (month: string, action: string, args?: unknown) => void;
+        onOpenCategoryMenu: () => void;
+      };
+    }
+  | {
       name: 'envelope-balance-menu';
       options: {
         categoryId: CategoryEntity['id'];

@@ -77,7 +77,7 @@ describe('BalanceMovementMenu', () => {
     expect(
       await screen.findByText('Underfunded (-250.00)'),
     ).toBeInTheDocument();
-    await userEvent.click(screen.getByText('Fund goal from To Budget'));
+    await userEvent.click(screen.getByText('Fund target from Ready to Assign'));
 
     expect(onBudgetAction).toHaveBeenCalledExactlyOnceWith(
       '2024-01',
@@ -95,7 +95,7 @@ describe('BalanceMovementMenu', () => {
 
       expect(await screen.findByText('Fully funded')).toBeInTheDocument();
       expect(
-        screen.queryByText('Fund goal from To Budget'),
+        screen.queryByText('Fund target from Ready to Assign'),
       ).not.toBeInTheDocument();
     } finally {
       setNumberFormat({ format: 'comma-dot', hideFraction: false });
@@ -110,7 +110,9 @@ describe('BalanceMovementMenu', () => {
       renderMenu({ hideFraction: 'true' });
 
       expect(await screen.findByText('Underfunded (-1)')).toBeInTheDocument();
-      expect(screen.getByText('Fund goal from To Budget')).toBeInTheDocument();
+      expect(
+        screen.getByText('Fund target from Ready to Assign'),
+      ).toBeInTheDocument();
     } finally {
       setNumberFormat({ format: 'comma-dot', hideFraction: false });
     }
@@ -124,7 +126,7 @@ describe('BalanceMovementMenu', () => {
       await screen.findByText('Underfunded (-250.00)'),
     ).toBeInTheDocument();
     expect(
-      screen.queryByText('Fund goal from To Budget'),
+      screen.queryByText('Fund target from Ready to Assign'),
     ).not.toBeInTheDocument();
   });
 });

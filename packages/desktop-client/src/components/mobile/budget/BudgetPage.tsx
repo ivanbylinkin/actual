@@ -50,6 +50,7 @@ import { prewarmMonth } from '#components/budget/util';
 import { FinancialText } from '#components/FinancialText';
 import { MobilePageHeader, Page } from '#components/Page';
 import { SyncRefresh } from '#components/SyncRefresh';
+import { MobileReadyToAssignBanner } from '#fork/MobileReadyToAssignBanner';
 import { useCategories } from '#hooks/useCategories';
 import { useFeatureFlag } from '#hooks/useFeatureFlag';
 import { useFormat } from '#hooks/useFormat';
@@ -451,6 +452,44 @@ export function BudgetPage() {
     ],
   );
 
+  // Fork: tapping an envelope expense category opens the inspector sheet,
+  // which links on to the category menu
+  const onOpenCategoryInspector = useCallback(
+    (id: string) => {
+      const category = categories.find(c => c.id === id);
+      if (budgetType !== 'envelope' || !category || category.is_income) {
+        onOpenCategoryMenuModal(id);
+        return;
+      }
+      dispatch(
+        pushModal({
+          modal: {
+            name: 'category-inspector',
+            options: {
+              categoryId: id,
+              month: startMonth,
+              onBudgetAction,
+              onOpenCategoryMenu: () => {
+                dispatch(
+                  collapseModals({ rootModalName: 'category-inspector' }),
+                );
+                onOpenCategoryMenuModal(id);
+              },
+            },
+          },
+        }),
+      );
+    },
+    [
+      budgetType,
+      categories,
+      dispatch,
+      onBudgetAction,
+      onOpenCategoryMenuModal,
+      startMonth,
+    ],
+  );
+
   const [showHiddenCategories, setShowHiddenCategoriesPref] = useLocalPref(
     'budget.showHiddenCategories',
   );
@@ -552,7 +591,7 @@ export function BudgetPage() {
           leftContent={
             <Button
               variant="bare"
-              style={{ margin: 10 }}
+              style={{ margin: '3px 10px', minHeight: 44 }}
               onPress={onOpenBudgetPageMenu}
               aria-label={t('Budget page menu')}
             >
@@ -591,6 +630,9 @@ export function BudgetPage() {
         >
           {({ onRefresh }) => (
             <>
+              {budgetType === 'envelope' && (
+                <MobileReadyToAssignBanner onPress={onShowBudgetSummary} />
+              )}
               <Banners month={startMonth} onBudgetAction={onBudgetAction} />
               <BudgetTable
                 // This key forces the whole table rerender when the number
@@ -602,7 +644,7 @@ export function BudgetPage() {
                 onBudgetAction={onBudgetAction}
                 onRefresh={onRefresh}
                 onEditCategoryGroup={onOpenCategoryGroupMenuModal}
-                onEditCategory={onOpenCategoryMenuModal}
+                onEditCategory={onOpenCategoryInspector}
               />
             </>
           )}
@@ -738,7 +780,7 @@ function OverbudgetedBanner({ month, onBudgetAction, ...props }) {
         modal: {
           name: 'cover',
           options: {
-            title: t('Cover overbudgeted'),
+            title: t('Cover over-assigned'),
             month,
             amount: toBudgetAmount,
             showToBeBudgeted: false,
@@ -749,7 +791,7 @@ function OverbudgetedBanner({ month, onBudgetAction, ...props }) {
                 currencyCode: format.currency.code,
               });
               showUndoNotification({
-                message: t('Covered overbudgeted from {{categoryName}}', {
+                message: t('Covered over-assigned from {{categoryName}}', {
                   categoryName: categoriesById[categoryId].name,
                 }),
               });
@@ -793,7 +835,7 @@ function OverbudgetedBanner({ month, onBudgetAction, ...props }) {
             >
               <SvgArrowButtonDown1 style={{ width: 15, height: 15 }} />
               <Text>
-                <Trans>You have budgeted more than your available funds</Trans>
+                <Trans>You assigned more than you have</Trans>
               </Text>
             </View>
           </View>
@@ -868,7 +910,7 @@ function OverspendingBanner({ month, onBudgetAction, budgetType, ...props }) {
                       toCategoryName: category.name,
                       fromCategoryName:
                         fromCategoryId === 'to-budget'
-                          ? t('To Budget')
+                          ? t('Ready to Assign')
                           : categoriesById[fromCategoryId].name,
                     },
                   ),
@@ -972,8 +1014,9 @@ function MonthSelector({
   const nextEnabled = month < monthBounds.end;
 
   const arrowButtonStyle = {
+    minWidth: 44,
+    minHeight: 44,
     padding: 10,
-    margin: 2,
   };
 
   return (
@@ -997,6 +1040,7 @@ function MonthSelector({
       <Button
         variant="bare"
         style={{
+          minHeight: 44,
           textAlign: 'center',
           fontSize: 16,
           fontWeight: 500,

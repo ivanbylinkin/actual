@@ -5,6 +5,7 @@ import { useLocation } from 'react-router';
 import { send } from '@actual-app/core/platform/client/connection';
 import * as monthUtils from '@actual-app/core/shared/months';
 
+import { CategoryInspectorModal } from '#fork/CategoryInspectorModal';
 import { useMetadataPref } from '#hooks/useMetadataPref';
 import { useModalState } from '#hooks/useModalState';
 import { SheetNameProvider } from '#hooks/useSheetName';
@@ -321,6 +322,9 @@ export function Modals() {
 
         case 'notes':
           return <NotesModal key={key} {...modal.options} />;
+
+        case 'category-inspector':
+          return <CategoryInspectorModal key={key} {...modal.options} />;
 
         case 'envelope-balance-menu':
           return (

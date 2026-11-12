@@ -65,9 +65,12 @@ function renderModal({
   const onFundGoal = vi.fn<(amount: number) => void>();
   const client = createTestQueryClient();
   const store = configureTestAppStore({ queryClient: client });
-  if (isGoalTemplatesEnabled) {
-    store.dispatch(mergeSyncedPrefs({ 'flags.goalTemplatesEnabled': 'true' }));
-  }
+  // Fork: goal templates default to on, so the flag is always set explicitly
+  store.dispatch(
+    mergeSyncedPrefs({
+      'flags.goalTemplatesEnabled': String(!!isGoalTemplatesEnabled),
+    }),
+  );
   initServer({
     'get-categories': async () => ({ grouped: [], list: [category] }),
     query: async () => ({ data: [], dependencies: [] }),
@@ -85,7 +88,7 @@ function renderModal({
   return { onFundGoal };
 }
 
-const fundGoalLabel = 'Fund goal from To Budget';
+const fundGoalLabel = 'Fund target from Ready to Assign';
 
 describe('EnvelopeBalanceMenuModal', () => {
   beforeEach(() => {

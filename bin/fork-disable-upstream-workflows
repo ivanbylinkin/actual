@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+#
+# Disables every GitHub Actions workflow in this fork except the fork's own
+# (.github/workflows/fork-*.yml).
+#
+# Upstream's workflows publish images and packages, cut releases and run CI on
+# runners this fork doesn't have. Disabling them is a repository setting, not
+# a file change, so it survives rebases and causes no merge conflicts. Run
+# this again after rebasing on upstream: new upstream workflows arrive enabled.
+#
+# Needs the GitHub CLI (`gh`), logged in with access to the fork.
+#
+# Usage: bin/fork-disable-upstream-workflows [owner/repo]
+#        (defaults to the `origin` remote)
+
+set -euo pipefail
+
+repo="${1:-}"
+if [ -z "$repo" ]; then
+  origin_url="$(git remote get-url origin)"
+  repo="$(printf '%s' "$origin_url" | sed -E 's#^(git@github\.com:|https://github\.com/)##; s#\.git$##')"
+fi
+
+if [ "$repo" = "actualbudget/actual" ]; then
+  echo "Refusing to run against upstream ($repo). Pass your fork as owner/repo." >&2
+  exit 1
+fi
+
+echo "Repository: $repo"
+
+workflows="$(gh api "repos/$repo/actions/workflows" --paginate \
+  --jq '.workflows[] | [.id, .state, .path] | @tsv')"
+
+if [ -z "$workflows" ]; then
+  echo "No workflows are registered yet."
+  echo "Open https://github.com/$repo/actions, enable workflows for the fork,"
+  echo "then run this script again."
+  exit 0
+fi
+
+disabled=0
+kept=0
+while IFS=$'\t' read -r id state path; do
+  case "$path" in
+    .github/workflows/fork-*)
+      echo "keep      $path ($state)"
+      kept=$((kept + 1))
+      ;;
+    *)
+      if [ "$state" = "active" ]; then
+        gh api --method PUT "repos/$repo/actions/workflows/$id/disable" >/dev/null
+        echo "disabled  $path"
+        disabled=$((disabled + 1))
+      else
+        echo "already   $path ($state)"
+      fi
+      ;;
+  esac
+done <<<"$workflows"
+
+echo
+echo "Disabled $disabled workflow(s); kept $kept fork workflow(s)."

@@ -18,6 +18,9 @@ vi.mock(
   () => import('#mocks/connection'),
 );
 
+// Fork: the row draws a target progress bar, which reads the budget sheet
+vi.mock('#hooks/useSheetValue', () => ({ useSheetValue: () => null }));
+
 describe('SidebarCategory context menu', () => {
   let store: ReturnType<typeof configureTestAppStore>;
 

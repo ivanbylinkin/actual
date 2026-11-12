@@ -202,6 +202,7 @@ function IncomeGroupName({
         variant="bare"
         style={{
           maxWidth: sidebarColumnWidth,
+          minHeight: 44,
         }}
         onPress={() => onEdit(group.id)}
       >

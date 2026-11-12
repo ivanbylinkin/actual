@@ -65,10 +65,10 @@ function getBudgetTourSteps({ navigate, budgetType }: TourStepDeps): Step[] {
       id: 'welcome',
       target: 'body',
       placement: 'center',
-      title: <Trans>Welcome to {{ appName: 'Actual' }}!</Trans>,
+      title: <Trans>Welcome to {{ appName: 'Budget' }}!</Trans>,
       content: (
         <Trans>
-          {{ appName: 'Actual' }} is a budgeting app that helps you understand
+          {{ appName: 'Budget' }} is a budgeting app that helps you understand
           exactly where your money goes. This short tour walks you through the
           basics. It only takes a couple of minutes, and you can leave at any
           time and replay it later from the Help menu.
@@ -110,7 +110,7 @@ function getBudgetTourSteps({ navigate, budgetType }: TourStepDeps): Step[] {
           </Trans>
         ) : (
           <Trans>
-            Categories in {{ appName: 'Actual' }} work like virtual envelopes:
+            Categories in {{ appName: 'Budget' }} work like virtual envelopes:
             you assign the money you already have to them, then spend from each
             envelope. This approach is called{' '}
             <Link
@@ -143,7 +143,7 @@ function getBudgetTourSteps({ navigate, budgetType }: TourStepDeps): Step[] {
             ),
           }
         : {
-            title: <Trans>To Budget</Trans>,
+            title: <Trans>Ready to Assign</Trans>,
             content: (
               <Trans>
                 The <strong>To Budget</strong> amount shows the money you have
@@ -205,7 +205,7 @@ function getBudgetTourSteps({ navigate, budgetType }: TourStepDeps): Step[] {
       content: (
         <Trans>
           Transactions live in accounts, so adding your first account is the
-          best way to get started with {{ appName: 'Actual' }}. Click here to
+          best way to get started with {{ appName: 'Budget' }}. Click here to
           add one. You can enter transactions yourself, or{' '}
           <Link
             variant="external"

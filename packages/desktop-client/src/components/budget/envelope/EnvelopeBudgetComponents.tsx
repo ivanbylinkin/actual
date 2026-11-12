@@ -22,6 +22,7 @@ import { NotesButton } from '#components/NotesButton';
 import { CellValue, CellValueText } from '#components/spreadsheet/CellValue';
 import { Field, Row, SheetCell } from '#components/table';
 import type { SheetCellProps } from '#components/table';
+import { AvailablePill } from '#fork/AvailablePill';
 import { useCategoryScheduleGoalTemplateIndicator } from '#hooks/useCategoryScheduleGoalTemplateIndicator';
 import { useFormat } from '#hooks/useFormat';
 import { useNavigate } from '#hooks/useNavigate';
@@ -87,7 +88,7 @@ export const BudgetTotalsMonth = memo(function BudgetTotalsMonth() {
     >
       <View style={headerLabelStyle}>
         <Text style={{ color: theme.tableHeaderText }}>
-          <Trans>Budgeted</Trans>
+          <Trans>Assigned</Trans>
         </Text>
         <EnvelopeCellValue
           binding={envelopeBudget.totalBudgeted}
@@ -100,7 +101,7 @@ export const BudgetTotalsMonth = memo(function BudgetTotalsMonth() {
       </View>
       <View style={headerLabelStyle}>
         <Text style={{ color: theme.tableHeaderText }}>
-          <Trans>Spent</Trans>
+          <Trans>Activity</Trans>
         </Text>
         <EnvelopeCellValue binding={envelopeBudget.totalSpent} type="financial">
           {props => <CellValueText {...props} style={cellStyle} />}
@@ -108,7 +109,7 @@ export const BudgetTotalsMonth = memo(function BudgetTotalsMonth() {
       </View>
       <View style={headerLabelStyle}>
         <Text style={{ color: theme.tableHeaderText }}>
-          <Trans>Balance</Trans>
+          <Trans>Available</Trans>
         </Text>
         <EnvelopeCellValue
           binding={envelopeBudget.totalBalance}
@@ -517,7 +518,7 @@ export const ExpenseCategoryMonth = memo(function ExpenseCategoryMonth({
             padding: 0,
           }}
         >
-          <BalanceWithCarryover
+          <AvailablePill
             carryover={envelopeBudget.catCarryover(category.id)}
             balance={envelopeBudget.catBalance(category.id)}
             goal={envelopeBudget.catGoal(category.id)}

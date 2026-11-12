@@ -10,11 +10,11 @@ import {
 } from '@actual-app/core/shared/months';
 import type { CategoryEntity } from '@actual-app/core/types/models/category';
 
-import { ToBudgetAmount } from '#components/budget/envelope/budgetsummary/ToBudgetAmount';
 import { TotalsList } from '#components/budget/envelope/budgetsummary/TotalsList';
 import { useEnvelopeSheetValue } from '#components/budget/envelope/EnvelopeBudgetComponents';
 import { ToBudgetSheetActions } from '#components/mobile/budget/ToBudgetSheetActions';
 import { MobileSheet } from '#components/mobile/MobileSheet';
+import { ReadyToAssignBanner } from '#fork/ReadyToAssignBanner';
 import { useCategoriesById } from '#hooks/useCategories';
 import { useFormat } from '#hooks/useFormat';
 import { useLocale } from '#hooks/useLocale';
@@ -87,7 +87,7 @@ export function EnvelopeBudgetSummaryModal({
         modal: {
           name: 'cover',
           options: {
-            title: t('Cover overbudgeted'),
+            title: t('Cover over-assigned'),
             month,
             showToBeBudgeted: false,
             amount: sheetValue,
@@ -99,7 +99,7 @@ export function EnvelopeBudgetSummaryModal({
               });
               dispatch(collapseModals({ rootModalName: 'cover' }));
               showUndoNotification({
-                message: t('Covered overbudgeted from {{categoryName}}', {
+                message: t('Covered over-assigned from {{categoryName}}', {
                   categoryName: categoriesById[categoryId].name,
                 }),
               });
@@ -140,7 +140,7 @@ export function EnvelopeBudgetSummaryModal({
               prevMonthName={prevMonthName}
               style={styles.mediumText}
             />
-            <ToBudgetAmount
+            <ReadyToAssignBanner
               prevMonthName={prevMonthName}
               style={{ ...styles.mediumText, marginTop: spacing.lg }}
               isTotalsListTooltipDisabled

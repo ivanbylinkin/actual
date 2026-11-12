@@ -23,7 +23,7 @@ export function AddTransactionButton({
     <Button
       variant="bare"
       aria-label={t('Add transaction')}
-      style={{ margin: 10 }}
+      style={{ margin: 3, minWidth: 44, minHeight: 44 }}
       onPress={() => {
         void navigate(to, { state: { accountId, categoryId } });
       }}

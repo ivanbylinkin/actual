@@ -81,7 +81,7 @@ export function BudgetMenuSheet({
                 marginBottom: spacing.xxs,
               }}
             >
-              <Trans>Budgeted</Trans>
+              <Trans>Assigned</Trans>
             </Text>
             <AmountInput
               value={integerToAmount(budgeted)}

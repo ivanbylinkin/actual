@@ -9,7 +9,8 @@
 }
 
 .react-grid-item.react-grid-placeholder {
-  background-color: #8719e0;
+  /* Fork: follow the brand colour instead of a fixed purple */
+  background-color: var(--color-buttonPrimaryBackground);
 }
 
 .react-grid-item > .react-resizable-handle::after {

@@ -28,7 +28,6 @@ import { useFormat } from '#hooks/useFormat';
 import { useLocalPref } from '#hooks/useLocalPref';
 import { useSheetValue } from '#hooks/useSheetValue';
 import { useSyncedPref } from '#hooks/useSyncedPref';
-import type { Binding } from '#spreadsheet';
 import { envelopeBudget, trackingBudget } from '#spreadsheet/bindings';
 
 import { ExpenseGroupList } from './ExpenseGroupList';
@@ -36,8 +35,19 @@ import { IncomeGroup } from './IncomeGroup';
 
 export const ROW_HEIGHT = 50;
 
+// Fork: transparent top and bottom borders make the pill a 44px tap target
+// without making it look taller. The background stops at the padding box, and
+// the taller vertical radius keeps the visible ends round.
+const PILL_TAP_MARGIN = 10;
+
 export const PILL_STYLE: CSSProperties = {
-  borderRadius: 16,
+  borderRadius: `16px / ${16 + PILL_TAP_MARGIN}px`,
+  borderTop: `${PILL_TAP_MARGIN}px solid transparent`,
+  borderBottom: `${PILL_TAP_MARGIN}px solid transparent`,
+  borderLeft: 'none',
+  borderRight: 'none',
+  backgroundClip: 'padding-box',
+  minWidth: 44,
   color: theme.pillText,
   backgroundColor: theme.pillBackgroundLight,
 };
@@ -57,87 +67,6 @@ export function getColumnWidth({
     return show3Columns ? `${20 + offset}vw` : `${25 + offset}vw`;
   }
   return show3Columns ? `${35 + offset}vw` : `${45 + offset}vw`;
-}
-
-type ToBudgetProps = {
-  toBudget: Binding<'envelope-budget', 'to-budget'>;
-  onPress: () => void;
-  show3Columns: boolean;
-};
-
-function ToBudget({ toBudget, onPress, show3Columns }: ToBudgetProps) {
-  const { t } = useTranslation();
-  const amount = useSheetValue(toBudget) ?? 0;
-  const format = useFormat();
-  const sidebarColumnWidth = getColumnWidth({ show3Columns, isSidebar: true });
-
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        width: sidebarColumnWidth,
-      }}
-    >
-      <Button variant="bare" onPress={onPress}>
-        <View>
-          <View>
-            <AutoTextSize
-              as={Label}
-              minFontSizePx={6}
-              maxFontSizePx={12}
-              mode="oneline"
-              title={amount < 0 ? t('Overbudgeted') : t('To Budget')}
-              style={{
-                ...(amount < 0 ? styles.smallText : {}),
-                color: theme.formInputText,
-                flexShrink: 0,
-                textAlign: 'left',
-              }}
-            />
-          </View>
-          <CellValue binding={toBudget} type="financial">
-            {({ type, value }) => (
-              <View>
-                <PrivacyFilter>
-                  <AutoTextSize
-                    key={value}
-                    as={Text}
-                    minFontSizePx={6}
-                    maxFontSizePx={12}
-                    mode="oneline"
-                    style={{
-                      ...styles.tnum,
-                      fontSize: 12,
-                      fontWeight: '700',
-                      color:
-                        amount < 0
-                          ? theme.toBudgetNegative
-                          : amount > 0
-                            ? theme.toBudgetPositive
-                            : theme.budgetNumberNeutral,
-                    }}
-                  >
-                    {format(value, type)}
-                  </AutoTextSize>
-                </PrivacyFilter>
-              </View>
-            )}
-          </CellValue>
-        </View>
-        <SvgCheveronRight
-          style={{
-            flexShrink: 0,
-            color: theme.mobileHeaderTextSubdued,
-            marginLeft: 5,
-          }}
-          width={14}
-          height={14}
-        />
-      </Button>
-    </View>
-  );
 }
 
 type SavedProps = {
@@ -422,6 +351,7 @@ function BudgetTableHeader({
   const format = useFormat();
   const [budgetType = 'envelope'] = useSyncedPref('budgetType');
   const buttonStyle = {
+    minHeight: 44,
     padding: 0,
     backgroundColor: 'transparent',
     borderRadius: 'unset',
@@ -445,7 +375,7 @@ function BudgetTableHeader({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexShrink: 0,
-        padding: '10px 15px',
+        padding: '4px 15px',
         paddingLeft: 10,
         backgroundColor: monthUtils.isCurrentMonth(month)
           ? theme.budgetHeaderCurrentMonth
@@ -462,15 +392,9 @@ function BudgetTableHeader({
           alignItems: 'center',
         }}
       >
-        {budgetType === 'tracking' ? (
+        {budgetType === 'tracking' && (
           <Saved
             projected={month >= monthUtils.currentMonth()}
-            onPress={onShowBudgetSummary}
-            show3Columns={show3Columns}
-          />
-        ) : (
-          <ToBudget
-            toBudget={envelopeBudget.toBudget}
             onPress={onShowBudgetSummary}
             show3Columns={show3Columns}
           />
@@ -521,7 +445,11 @@ function BudgetTableHeader({
                         minFontSizePx={8}
                         maxFontSizePx={12}
                         mode="multiline"
-                        title={t('Budgeted')}
+                        title={
+                          budgetType === 'tracking'
+                            ? t('Budgeted')
+                            : t('Assigned')
+                        }
                         style={{ color: theme.formInputText, paddingRight: 4 }}
                       />
                     </View>
@@ -589,7 +517,9 @@ function BudgetTableHeader({
                         minFontSizePx={6}
                         maxFontSizePx={12}
                         mode="oneline"
-                        title={t('Spent')}
+                        title={
+                          budgetType === 'tracking' ? t('Spent') : t('Activity')
+                        }
                         style={{ color: theme.formInputText, paddingRight: 4 }}
                       />
                     </View>
@@ -633,7 +563,9 @@ function BudgetTableHeader({
                     minFontSizePx={6}
                     maxFontSizePx={12}
                     mode="oneline"
-                    title={t('Balance')}
+                    title={
+                      budgetType === 'tracking' ? t('Balance') : t('Available')
+                    }
                     style={{ color: theme.formInputText }}
                   />
                 </View>

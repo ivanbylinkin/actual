@@ -71,7 +71,10 @@ export function AccountPage() {
               <NameOnlyHeader name={nameFromId(accountIdParam)} />
             )
           }
-          leftContent={<MobileBackButton />}
+          // Fork: all accounts is the Transactions tab, a top-level page
+          leftContent={
+            accountIdParam === 'all' ? undefined : <MobileBackButton />
+          }
           rightContent={<AddTransactionButton accountId={account?.id} />}
         />
       }
@@ -255,7 +258,7 @@ function AllAccountsHeader() {
 
   return (
     <View style={{ flexDirection: 'row' }}>
-      <Button variant="bare" onPress={onClick}>
+      <Button variant="bare" onPress={onClick} style={{ minHeight: 44 }}>
         <Text
           size="extra-large"
           style={{

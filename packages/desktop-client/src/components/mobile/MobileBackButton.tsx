@@ -21,7 +21,8 @@ export function MobileBackButton({
     <Button
       variant="bare"
       style={{
-        margin: 10,
+        margin: '3px 10px',
+        minHeight: 44,
         ...style,
       }}
       onPress={onPress || (() => navigate(-1))}

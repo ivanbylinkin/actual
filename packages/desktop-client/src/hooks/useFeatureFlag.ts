@@ -4,8 +4,9 @@ import { useSyncedPref } from './useSyncedPref';
 
 const DEFAULT_FEATURE_FLAG_STATE: Record<FeatureFlag, boolean> = {
   newSidebarUI: false,
-  goalTemplatesEnabled: false,
-  goalTemplatesUIEnabled: false,
+  // Fork: targets, pills and the category inspector depend on goal templates
+  goalTemplatesEnabled: true,
+  goalTemplatesUIEnabled: true,
   actionTemplating: false,
   formulaMode: false,
   currency: false,

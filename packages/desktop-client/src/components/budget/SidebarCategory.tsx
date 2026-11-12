@@ -14,6 +14,8 @@ import type {
 } from '@actual-app/core/types/models';
 
 import { InputCell } from '#components/table';
+import { useCategoryInspector } from '#fork/CategoryInspectorContext';
+import { TargetProgressBar } from '#fork/TargetProgressBar';
 import { useContextMenu } from '#hooks/useContextMenu';
 import { useGlobalPref } from '#hooks/useGlobalPref';
 
@@ -63,6 +65,9 @@ export function SidebarCategory({
   const categoryExpandedState = categoryExpandedStatePref ?? 0;
 
   const temporary = category.id === 'new';
+  const { selectedCategoryId, toggleCategory } = useCategoryInspector();
+  const isInspected = selectedCategoryId === category.id;
+  const canInspect = !temporary && !editing && !category.is_income;
   const triggerRef = useRef(null);
   const { handleContextMenu } = useContextMenu({
     triggerRef,
@@ -145,7 +150,20 @@ export function SidebarCategory({
           borderRadius: 6,
           overflow: 'hidden',
         }),
+        ...(canInspect && { cursor: 'pointer' }),
+        ...(isInspected && {
+          backgroundColor: theme.tableRowBackgroundHighlight,
+          color: theme.tableRowBackgroundHighlightText,
+        }),
         ...style,
+      }}
+      onClick={e => {
+        // The row's own buttons (menu, notes, automations) keep their job
+        const isOnButton =
+          e.target instanceof Element && e.target.closest('button') != null;
+        if (canInspect && !isOnButton) {
+          toggleCategory(category.id);
+        }
       }}
       onKeyDown={e => {
         if (e.key === 'Enter') {
@@ -178,6 +196,12 @@ export function SidebarCategory({
           placeholder: temporary ? t('New category name') : '',
         }}
       />
+      {!temporary && !editing && !dragPreview && (
+        <TargetProgressBar
+          category={category}
+          style={{ position: 'absolute', left: 13, right: 10, bottom: 3 }}
+        />
+      )}
     </View>
   );
 }
