@@ -16,6 +16,7 @@ import type { IntegerAmount } from '@actual-app/core/shared/util';
 import type { CategoryEntity } from '@actual-app/core/types/models';
 
 import { MobileAvailablePill } from '#fork/MobileAvailablePill';
+import { TargetProgressBar } from '#fork/TargetProgressBar';
 import { useCategoriesById } from '#hooks/useCategories';
 import { useFormat } from '#hooks/useFormat';
 import { useNavigate } from '#hooks/useNavigate';
@@ -97,6 +98,10 @@ function ExpenseCategoryName({
           />
         </View>
       </Button>
+      <TargetProgressBar
+        category={category}
+        style={{ alignSelf: 'stretch', margin: '-2px 24px 0 5px' }}
+      />
     </View>
   );
 }

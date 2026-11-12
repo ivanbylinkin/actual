@@ -14,6 +14,7 @@ import type {
 } from '@actual-app/core/types/models';
 
 import { InputCell } from '#components/table';
+import { TargetProgressBar } from '#fork/TargetProgressBar';
 import { useContextMenu } from '#hooks/useContextMenu';
 import { useGlobalPref } from '#hooks/useGlobalPref';
 
@@ -178,6 +179,12 @@ export function SidebarCategory({
           placeholder: temporary ? t('New category name') : '',
         }}
       />
+      {!temporary && !editing && !dragPreview && (
+        <TargetProgressBar
+          category={category}
+          style={{ position: 'absolute', left: 13, right: 10, bottom: 3 }}
+        />
+      )}
     </View>
   );
 }

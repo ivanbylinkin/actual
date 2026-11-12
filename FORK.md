@@ -49,6 +49,8 @@ All under `packages/desktop-client/src/fork/` unless a full path is given.
   props as upstream's `ToBudgetAmount`.
 - `MobileReadyToAssignBanner.tsx`: mobile Ready to Assign banner at the top of
   the budget.
+- `lib/targetProgress.ts`: reads a category's target and how far it is funded.
+- `TargetProgressBar.tsx`: thin progress bar for a category's target.
 - `packages/component-library/src/themes/source/fork/contrast.ts`: resolves a
   token to its hex per theme and measures WCAG contrast.
 - `packages/component-library/src/themes/source/fork/contrast.web.test.ts`:
@@ -87,6 +89,13 @@ given.
 `BalanceWithCarryover.tsx` and `BalanceCell.tsx` are untouched. Income rows and
 the balance-menu sheet header still use them.
 
+### Target progress bars
+
+- `components/budget/SidebarCategory.tsx`: renders `TargetProgressBar` under
+  the category name (one import, one element).
+- `components/mobile/budget/ExpenseCategoryListItem.tsx`: same, under the name
+  button.
+
 ### Ready to Assign banner
 
 - `components/budget/envelope/budgetsummary/ToBudget.tsx`: renders
@@ -121,6 +130,8 @@ Available, To Budget → Ready to Assign, overbudgeted → over-assigned.
   which is now `true`.
 - `components/budget/tracking/TrackingBudgetComponents.test.tsx`: one test
   asserts the pill's underfunded state instead of the goal ring.
+- `components/budget/SidebarCategory.test.tsx`: mocks `useSheetValue`, because
+  the row now reads the category's target from the budget sheet.
 - `components/mobile/budget/ExpenseCategoryListItem.test.tsx`: button name
   matched by prefix, because the pill appends its state to the label.
 - `components/modals/EnvelopeBalanceMenuModal.test.tsx` and
