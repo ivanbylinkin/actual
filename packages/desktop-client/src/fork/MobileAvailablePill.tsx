@@ -99,7 +99,8 @@ export function MobileAvailablePill({
           style={{
             position: 'absolute',
             right: -3,
-            top: -5,
+            // The button is taller than the visible pill (see PILL_STYLE)
+            top: 5,
             borderRadius: '50%',
             backgroundColor: pillColors.color,
           }}

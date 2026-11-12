@@ -6,8 +6,8 @@ import { animated, config, useSpring } from 'react-spring';
 
 import { useResponsive } from '@actual-app/components/hooks/useResponsive';
 import {
-  SvgAdd,
   SvgCog,
+  SvgListBullet,
   SvgPiggyBank,
   SvgReports,
   SvgWallet,
@@ -18,10 +18,12 @@ import { theme } from '@actual-app/components/theme';
 import { View } from '@actual-app/components/view';
 import { useDrag } from '@use-gesture/react';
 
+import { MobileNavAddButton } from '#fork/MobileNavAddButton';
 import { useIsTestEnv } from '#hooks/useIsTestEnv';
 import { useScrollListener } from '#hooks/useScrollListener';
 
-const COLUMN_COUNT = 3;
+// Fork: one row of four tabs around the add button; the rest is a swipe up
+const COLUMN_COUNT = 5;
 const ROW_COUNT = 2;
 const PILL_HEIGHT = 15;
 const ROW_HEIGHT = 70;
@@ -43,7 +45,8 @@ export function MobileNavTabs() {
   const navTabStyle = {
     flex: `1 1 ${100 / COLUMN_COUNT}%`,
     height: ROW_HEIGHT,
-    padding: 10,
+    padding: '10px 2px',
+    fontSize: 12,
     maxWidth: `${100 / COLUMN_COUNT}%`,
   };
 
@@ -103,16 +106,18 @@ export function MobileNavTabs() {
       Icon: SvgWallet,
     },
     {
-      name: t('Transaction'),
-      path: '/transactions/new',
-      style: navTabStyle,
-      Icon: SvgAdd,
-    },
-    {
       name: t('Accounts'),
       path: '/accounts',
+      // Stay unselected on the Transactions tab, which lives under /accounts
+      end: true,
       style: navTabStyle,
       Icon: SvgPiggyBank,
+    },
+    {
+      name: t('Transactions'),
+      path: '/accounts/all',
+      style: navTabStyle,
+      Icon: SvgListBullet,
     },
     {
       name: t('Reports'),
@@ -135,6 +140,17 @@ export function MobileNavTabs() {
   ].map(tab => (
     <NavTab key={tab.path} onClick={() => openDefault()} {...tab} />
   ));
+
+  // Fork: the add button sits in the middle of the first row
+  navTabs.splice(
+    2,
+    0,
+    <MobileNavAddButton
+      key="add-transaction"
+      style={navTabStyle}
+      onClick={() => openDefault()}
+    />,
+  );
 
   useScrollListener(
     useCallback(
@@ -242,15 +258,24 @@ type NavTabIconProps = {
 type NavTabProps = {
   name: string;
   path: string;
+  end?: boolean;
   Icon: ComponentType<NavTabIconProps>;
   style?: CSSProperties;
   onClick: ComponentProps<typeof NavLink>['onClick'];
 };
 
-function NavTab({ Icon: TabIcon, name, path, style, onClick }: NavTabProps) {
+function NavTab({
+  Icon: TabIcon,
+  name,
+  path,
+  end,
+  style,
+  onClick,
+}: NavTabProps) {
   return (
     <NavLink
       to={path}
+      end={end}
       style={({ isActive }) => ({
         ...styles.noTapHighlight,
         alignItems: 'center',

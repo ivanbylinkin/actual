@@ -63,6 +63,8 @@ All under `packages/desktop-client/src/fork/` unless a full path is given.
 - `lib/quickAssign.ts`: which months an average covers, and the arithmetic for
   "spent last month" and "average assigned".
 - `lib/useMonthSheetValue.ts`: reads a budget cell from another month's sheet.
+- `MobileNavAddButton.tsx`: the round add-transaction button in the middle of
+  the mobile tab bar.
 - `packages/component-library/src/themes/source/fork/contrast.ts`: resolves a
   token to its hex per theme and measures WCAG contrast.
 - `packages/component-library/src/themes/source/fork/contrast.web.test.ts`:
@@ -129,6 +131,48 @@ run Actual's own `copy-single-last`, `set-single-3-avg` and
 month" or "average assigned", so those read earlier months from the budget
 sheet and set the result with the ordinary `budget-amount` action. Nothing in
 loot-core changed.
+
+### Mobile navigation
+
+- `components/mobile/MobileNavTabs.tsx`: the first row is Budget, Accounts,
+  the add button, Transactions, Reports (`COLUMN_COUNT` 3 → 5, the tab list
+  reordered, `MobileNavAddButton` spliced in, an `end` prop so Accounts is not
+  highlighted on the Transactions tab, tighter label padding). Schedules and
+  Settings are on the second row, reached by swiping the bar up as before.
+- `components/FinancesApp.tsx`: one route so the tab bar shows on
+  `/accounts/all`, which is the Transactions tab.
+- `components/mobile/accounts/AccountPage.tsx`: no Back button on
+  `/accounts/all`, since it is now a top-level tab.
+
+Transaction entry was already amount-first upstream (the amount is the first
+field and takes focus on a new transaction), so nothing changed there.
+
+### 44px tap targets (mobile layout)
+
+- `packages/component-library/src/styles.ts`: `MOBILE_MIN_HEIGHT` 40 → 44.
+  Every mobile form field, sheet row and large button uses it.
+- `components/mobile/budget/BudgetTable.tsx`: `PILL_STYLE` gets transparent
+  10px top and bottom borders with `background-clip: padding-box`, a matching
+  vertical radius and `minWidth: 44`. The Assigned, Activity and Available
+  pills look the same and are 45px tall to the touch. Column header buttons
+  get `minHeight: 44`; the header's vertical padding drops from 10 to 4 to
+  absorb it.
+- `components/mobile/budget/ExpenseCategoryListItem.tsx`,
+  `IncomeCategoryListItem.tsx`, `ExpenseGroupListItem.tsx`, `IncomeGroup.tsx`:
+  `minHeight: 44` on the name buttons (and the group collapse button).
+- `components/mobile/budget/BudgetPage.tsx`: `minHeight`/`minWidth: 44` on the
+  header's menu, month and arrow buttons.
+- `components/mobile/transactions/AddTransactionButton.tsx`,
+  `components/mobile/MobileBackButton.tsx`,
+  `components/mobile/accounts/AccountsPage.tsx` (Add account),
+  `components/mobile/accounts/AccountPage.tsx` (title button): `minHeight: 44`
+  and, for the icon buttons, `minWidth: 44` with a smaller margin so the header
+  keeps its size.
+
+Still under 44px, all upstream and left alone: the group collapse chevron
+(18px wide, 44px tall, with the 44px group name beside it), and inside the
+new-transaction form the "Request Location" button (24px tall), the "Add tag"
+button (19px) and the search field's inner input.
 
 ### Ready to Assign banner
 

@@ -35,8 +35,19 @@ import { IncomeGroup } from './IncomeGroup';
 
 export const ROW_HEIGHT = 50;
 
+// Fork: transparent top and bottom borders make the pill a 44px tap target
+// without making it look taller. The background stops at the padding box, and
+// the taller vertical radius keeps the visible ends round.
+const PILL_TAP_MARGIN = 10;
+
 export const PILL_STYLE: CSSProperties = {
-  borderRadius: 16,
+  borderRadius: `16px / ${16 + PILL_TAP_MARGIN}px`,
+  borderTop: `${PILL_TAP_MARGIN}px solid transparent`,
+  borderBottom: `${PILL_TAP_MARGIN}px solid transparent`,
+  borderLeft: 'none',
+  borderRight: 'none',
+  backgroundClip: 'padding-box',
+  minWidth: 44,
   color: theme.pillText,
   backgroundColor: theme.pillBackgroundLight,
 };
@@ -340,6 +351,7 @@ function BudgetTableHeader({
   const format = useFormat();
   const [budgetType = 'envelope'] = useSyncedPref('budgetType');
   const buttonStyle = {
+    minHeight: 44,
     padding: 0,
     backgroundColor: 'transparent',
     borderRadius: 'unset',
@@ -363,7 +375,7 @@ function BudgetTableHeader({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexShrink: 0,
-        padding: '10px 15px',
+        padding: '4px 15px',
         paddingLeft: 10,
         backgroundColor: monthUtils.isCurrentMonth(month)
           ? theme.budgetHeaderCurrentMonth

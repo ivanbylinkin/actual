@@ -591,7 +591,7 @@ export function BudgetPage() {
           leftContent={
             <Button
               variant="bare"
-              style={{ margin: 10 }}
+              style={{ margin: '3px 10px', minHeight: 44 }}
               onPress={onOpenBudgetPageMenu}
               aria-label={t('Budget page menu')}
             >
@@ -1014,8 +1014,9 @@ function MonthSelector({
   const nextEnabled = month < monthBounds.end;
 
   const arrowButtonStyle = {
+    minWidth: 44,
+    minHeight: 44,
     padding: 10,
-    margin: 2,
   };
 
   return (
@@ -1039,6 +1040,7 @@ function MonthSelector({
       <Button
         variant="bare"
         style={{
+          minHeight: 44,
           textAlign: 'center',
           fontSize: 16,
           fontWeight: 500,

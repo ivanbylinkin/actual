@@ -342,7 +342,7 @@ function AllAccountList({
             <Button
               variant="bare"
               aria-label={t('Add account')}
-              style={{ margin: 10 }}
+              style={{ margin: 3, minWidth: 44, minHeight: 44 }}
               onPress={onAddAccount}
             >
               <SvgAdd width={20} height={20} />

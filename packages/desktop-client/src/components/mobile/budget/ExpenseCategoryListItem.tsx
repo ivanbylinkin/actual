@@ -70,6 +70,7 @@ function ExpenseCategoryName({
         variant="bare"
         style={{
           maxWidth: sidebarColumnWidth,
+          minHeight: 44,
         }}
         onPress={() => onEditCategory?.(category.id)}
       >
@@ -100,7 +101,7 @@ function ExpenseCategoryName({
       </Button>
       <TargetProgressBar
         category={category}
-        style={{ alignSelf: 'stretch', margin: '-2px 24px 0 5px' }}
+        style={{ alignSelf: 'stretch', margin: '-11px 24px 8px 5px' }}
       />
     </View>
   );

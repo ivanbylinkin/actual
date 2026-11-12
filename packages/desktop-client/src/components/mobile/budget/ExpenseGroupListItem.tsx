@@ -218,6 +218,7 @@ function ExpenseGroupName({
             backgroundColor: 'transparent',
           },
           marginLeft: -5,
+          minHeight: 44,
         })}
         onPress={() => onToggleCollapse(group.id)}
       >
@@ -235,6 +236,7 @@ function ExpenseGroupName({
         variant="bare"
         style={{
           maxWidth: sidebarColumnWidth,
+          minHeight: 44,
         }}
         onPress={() => onEditCategoryGroup(group.id)}
       >
