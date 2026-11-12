@@ -368,12 +368,12 @@ function AllAccountList({
             {onBudgetAccounts.length > 0 && (
               <AccountHeader
                 id="onbudget"
-                name={t('On budget')}
+                name={t('Budget')}
                 amount={getOnBudgetBalance()}
               />
             )}
             <AccountList
-              aria-label={t('On budget accounts')}
+              aria-label={t('Budget accounts')}
               accounts={onBudgetAccounts}
               getAccountBalance={getAccountBalance}
               onOpenAccount={onOpenAccount}
@@ -381,12 +381,12 @@ function AllAccountList({
             {offBudgetAccounts.length > 0 && (
               <AccountHeader
                 id="offbudget"
-                name={t('Off budget')}
+                name={t('Tracking')}
                 amount={getOffBudgetBalance()}
               />
             )}
             <AccountList
-              aria-label={t('Off budget accounts')}
+              aria-label={t('Tracking accounts')}
               accounts={offBudgetAccounts}
               getAccountBalance={getAccountBalance}
               onOpenAccount={onOpenAccount}

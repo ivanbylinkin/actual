@@ -14,6 +14,9 @@ const textOnSurfacePairs = [
   ['readyToAssignPositiveText', 'readyToAssignPositiveBackground'],
   ['readyToAssignNegativeText', 'readyToAssignNegativeBackground'],
   ['readyToAssignZeroText', 'readyToAssignZeroBackground'],
+  ['sidebarItemText', 'sidebarBackground'],
+  ['sidebarItemTextSelected', 'sidebarBackground'],
+  ['sidebarHeaderText', 'sidebarBackground'],
 ] as const;
 
 describe('contrastRatio', () => {

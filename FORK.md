@@ -104,6 +104,22 @@ given.
 To retune a ramp, pick a hue and keep each step's luminance; the generator
 used for these values is described in the commit that introduced them.
 
+### Sidebar
+
+- `packages/component-library/src/themes/source/colors.ts`:
+  `sidebarBackground` is `purple900` (dark indigo) and
+  `sidebarItemBackgroundHover` is `purple800`, in all three themes.
+- `components/sidebar/Accounts.tsx`: the account groups read "Budget" and
+  "Tracking" instead of "On budget" and "Off budget". The groups and their
+  totals were already there.
+- `components/sidebar/redesign/AccountsSection.tsx`: same two labels, for the
+  redesigned sidebar behind the `newSidebarUI` flag.
+- `components/mobile/accounts/AccountsPage.tsx`: same two labels and their
+  aria-labels on the mobile accounts page.
+
+Elsewhere (account pickers, reports, the command bar) the groups still read
+"On budget" and "Off budget".
+
 ### Pills
 
 - `components/budget/envelope/EnvelopeBudgetComponents.tsx`: the expense

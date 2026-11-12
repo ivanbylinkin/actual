@@ -181,7 +181,8 @@ export const colors = {
   readyToAssignZeroBackground: { all: { ref: 'availableZeroBackground' } },
   readyToAssignZeroText: { all: { ref: 'availableZeroText' } },
 
-  sidebarBackground: { light: 'navy900', dark: 'navy900', midnight: 'gray900' },
+  // Fork: dark indigo sidebar in every theme (upstream: navy / near-black)
+  sidebarBackground: { all: 'purple900' },
   sidebarItemBackgroundPending: { all: 'orange200' },
   sidebarItemBackgroundPositive: {
     light: 'green500',
@@ -189,11 +190,7 @@ export const colors = {
     midnight: 'green400',
   },
   sidebarItemBackgroundFailed: { all: 'red300' },
-  sidebarItemBackgroundHover: {
-    light: 'navy800',
-    dark: 'navy700',
-    midnight: 'gray700',
-  },
+  sidebarItemBackgroundHover: { all: 'purple800' },
   sidebarItemAccentSelected: { all: 'purple200' },
   sidebarItemBackgroundSelected: {
     light: {
