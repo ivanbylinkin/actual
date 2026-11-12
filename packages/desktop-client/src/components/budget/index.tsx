@@ -22,6 +22,7 @@ import {
   useSaveCategoryMutation,
   useSortCategoriesMutation,
 } from '#budget';
+import { CategoryInspectorLayout } from '#fork/CategoryInspectorLayout';
 import { useCategories } from '#hooks/useCategories';
 import { useGlobalPref } from '#hooks/useGlobalPref';
 import { useLocalPref } from '#hooks/useLocalPref';
@@ -252,7 +253,12 @@ export function Budget() {
           overflow: 'hidden',
         }}
       >
-        <View style={{ flex: 1 }}>{table}</View>
+        <CategoryInspectorLayout
+          month={startMonth}
+          onBudgetAction={onBudgetAction}
+        >
+          {table}
+        </CategoryInspectorLayout>
       </View>
     </SheetNameProvider>
   );

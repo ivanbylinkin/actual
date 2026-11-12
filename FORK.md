@@ -51,6 +51,18 @@ All under `packages/desktop-client/src/fork/` unless a full path is given.
   the budget.
 - `lib/targetProgress.ts`: reads a category's target and how far it is funded.
 - `TargetProgressBar.tsx`: thin progress bar for a category's target.
+- `CategoryInspectorContext.tsx`: which category the desktop inspector shows.
+- `CategoryInspectorLayout.tsx`: wraps the desktop budget table and places the
+  inspector panel beside it.
+- `CategoryInspectorPanel.tsx`: the desktop panel (header, close, scroll).
+- `CategoryInspectorModal.tsx`: the mobile bottom sheet.
+- `CategoryInspectorBody.tsx`: the content both share.
+- `InspectorBreakdown.tsx`, `InspectorTarget.tsx`, `InspectorQuickAssign.tsx`:
+  the three sections. `InspectorSection.tsx` and `InspectorAmountRow.tsx` are
+  their layout pieces.
+- `lib/quickAssign.ts`: which months an average covers, and the arithmetic for
+  "spent last month" and "average assigned".
+- `lib/useMonthSheetValue.ts`: reads a budget cell from another month's sheet.
 - `packages/component-library/src/themes/source/fork/contrast.ts`: resolves a
   token to its hex per theme and measures WCAG contrast.
 - `packages/component-library/src/themes/source/fork/contrast.web.test.ts`:
@@ -95,6 +107,28 @@ the balance-menu sheet header still use them.
   the category name (one import, one element).
 - `components/mobile/budget/ExpenseCategoryListItem.tsx`: same, under the name
   button.
+
+### Category inspector
+
+- `components/budget/index.tsx`: the table is wrapped in
+  `CategoryInspectorLayout` (one import, one element replacing a `View`).
+- `components/budget/SidebarCategory.tsx`: clicking a category name selects it
+  for the inspector and highlights the row (one hook call, one `onClick`, two
+  style entries).
+- `modals/modalsSlice.ts`: a `category-inspector` entry in the `Modal` union.
+- `components/Modals.tsx`: a `case 'category-inspector'` that renders
+  `CategoryInspectorModal`.
+- `components/mobile/budget/BudgetPage.tsx`: tapping an envelope expense
+  category opens the inspector sheet instead of the category menu. The sheet
+  has a "Category settings" row that opens the menu. Income categories and
+  tracking budgets open the menu directly, as before.
+
+Quick assign: "assigned last month", "average spent" and "fund the target"
+run Actual's own `copy-single-last`, `set-single-3-avg` and
+`apply-single-category-template` actions. Actual has no action for "spent last
+month" or "average assigned", so those read earlier months from the budget
+sheet and set the result with the ordinary `budget-amount` action. Nothing in
+loot-core changed.
 
 ### Ready to Assign banner
 

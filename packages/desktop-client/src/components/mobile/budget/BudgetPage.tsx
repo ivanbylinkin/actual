@@ -452,6 +452,44 @@ export function BudgetPage() {
     ],
   );
 
+  // Fork: tapping an envelope expense category opens the inspector sheet,
+  // which links on to the category menu
+  const onOpenCategoryInspector = useCallback(
+    (id: string) => {
+      const category = categories.find(c => c.id === id);
+      if (budgetType !== 'envelope' || !category || category.is_income) {
+        onOpenCategoryMenuModal(id);
+        return;
+      }
+      dispatch(
+        pushModal({
+          modal: {
+            name: 'category-inspector',
+            options: {
+              categoryId: id,
+              month: startMonth,
+              onBudgetAction,
+              onOpenCategoryMenu: () => {
+                dispatch(
+                  collapseModals({ rootModalName: 'category-inspector' }),
+                );
+                onOpenCategoryMenuModal(id);
+              },
+            },
+          },
+        }),
+      );
+    },
+    [
+      budgetType,
+      categories,
+      dispatch,
+      onBudgetAction,
+      onOpenCategoryMenuModal,
+      startMonth,
+    ],
+  );
+
   const [showHiddenCategories, setShowHiddenCategoriesPref] = useLocalPref(
     'budget.showHiddenCategories',
   );
@@ -606,7 +644,7 @@ export function BudgetPage() {
                 onBudgetAction={onBudgetAction}
                 onRefresh={onRefresh}
                 onEditCategoryGroup={onOpenCategoryGroupMenuModal}
-                onEditCategory={onOpenCategoryMenuModal}
+                onEditCategory={onOpenCategoryInspector}
               />
             </>
           )}
