@@ -133,7 +133,7 @@ export const colors = {
 
   // Fork: filled pills behind a category's available balance
   availableFundedBackground: {
-    light: 'green150',
+    light: 'green200',
     dark: 'green800',
     midnight: 'green800',
   },
@@ -143,7 +143,7 @@ export const colors = {
     midnight: 'green150',
   },
   availableUnderfundedBackground: {
-    light: 'orange200',
+    light: 'orange400',
     dark: 'orange800',
     midnight: 'orange800',
   },

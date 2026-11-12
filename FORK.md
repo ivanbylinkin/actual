@@ -90,6 +90,20 @@ given.
   `available*` tokens (pill background and text) and one block of
   `readyToAssign*` tokens that reference them, both after `toBudgetNegative`.
 
+### Palette
+
+- `packages/component-library/src/themes/source/palette.ts`: the `purple*`
+  values are an indigo-blue ramp, `green*` is grass green and `orange*` is
+  amber. Key names are unchanged, so every token in `colors.ts` and all three
+  themes follow without edits. Each new step has the same relative luminance
+  as the colour it replaces, so existing text/background contrast is
+  unchanged. `red*` is upstream's.
+- `components/reports/overview.scss`: the one hard-coded purple (`#8719e0`,
+  the dashboard drag placeholder) now uses the brand token.
+
+To retune a ramp, pick a hue and keep each step's luminance; the generator
+used for these values is described in the commit that introduced them.
+
 ### Pills
 
 - `components/budget/envelope/EnvelopeBudgetComponents.tsx`: the expense
