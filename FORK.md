@@ -90,6 +90,22 @@ given.
   `available*` tokens (pill background and text) and one block of
   `readyToAssign*` tokens that reference them, both after `toBudgetNegative`.
 
+### App name
+
+"Actual" → "Budget" where the app introduces itself:
+
+- `packages/desktop-client/index.html`: the page title; `theme-color` is the
+  indigo brand colour.
+- `packages/desktop-client/public/site.webmanifest`: `name`, `short_name`,
+  the two screenshot labels, `theme_color` and `background_color`.
+- `components/manager/WelcomeScreen.tsx`, `components/manager/subscribe/Bootstrap.tsx`:
+  the welcome headings and intro sentences.
+- `components/tour/steps.tsx`, `components/tour/TourAutoOffer.ts`,
+  `components/CommandBar.tsx`: the `appName` interpolation value.
+
+About 30 other strings still say "Actual" (settings descriptions, help and
+error text, links to Actual's documentation). The logo and icons are Actual's.
+
 ### Palette
 
 - `packages/component-library/src/themes/source/palette.ts`: the `purple*`

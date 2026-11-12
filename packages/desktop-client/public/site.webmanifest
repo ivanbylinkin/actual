@@ -1,6 +1,6 @@
 {
-  "name": "Actual",
-  "short_name": "Actual",
+  "name": "Budget",
+  "short_name": "Budget",
   "description": "A local-first personal finance tool",
   "icons": [
     {
@@ -70,20 +70,20 @@
     {
       "src": "/screenshot_wide.png",
       "form_factor": "wide",
-      "label": "Actual Budget Homepage",
+      "label": "Budget Homepage",
       "type": "image/png",
       "sizes": "1280x720"
     },
     {
       "src": "/screenshot_narrow.png",
       "form_factor": "narrow",
-      "label": "Actual Budget Mobile Homepage",
+      "label": "Budget Mobile Homepage",
       "type": "image/png",
       "sizes": "350x600"
     }
   ],
-  "theme_color": "#5c3dbb",
-  "background_color": "#5c3dbb",
+  "theme_color": "#3a4dda",
+  "background_color": "#3a4dda",
   "display": "standalone",
   "start_url": "./"
 }
