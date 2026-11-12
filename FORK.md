@@ -29,38 +29,103 @@ ways:
   names and carry indigo values, so no call site changes.
 - Category balances are filled, fully rounded pills rather than coloured text.
 
+## Scope
+
+Envelope budgets get everything. Tracking budgets get the pills only: they
+keep upstream's Budgeted / Spent / Balance wording and have no Ready to Assign
+banner. Reports keep upstream's wording.
+
 ## New files
 
-| Path                                                                     | Purpose                                                                                  |
-| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| `packages/desktop-client/src/fork/lib/availableState.ts`                 | Works out a category's pill state (funded, underfunded, overspent, zero) and its colours |
-| `packages/desktop-client/src/fork/AvailablePill.tsx`                     | Desktop available-balance pill                                                           |
-| `packages/desktop-client/src/fork/MobileAvailablePill.tsx`               | Mobile available-balance pill                                                            |
-| `packages/component-library/src/themes/source/fork/contrast.ts`          | Resolves a token to its hex per theme and measures WCAG contrast                         |
-| `packages/component-library/src/themes/source/fork/contrast.web.test.ts` | Fails if text on a fork-added surface drops below 4.5:1 in any theme                     |
+All under `packages/desktop-client/src/fork/` unless a full path is given.
+
+- `lib/availableState.ts`: works out a category's pill state (funded,
+  underfunded, overspent, zero) and its colours.
+- `AvailablePill.tsx`: desktop available-balance pill.
+- `MobileAvailablePill.tsx`: mobile available-balance pill.
+- `lib/readyToAssign.ts`: Ready to Assign state (positive, negative, zero),
+  colours and status line.
+- `ReadyToAssignBanner.tsx`: desktop Ready to Assign banner. Takes the same
+  props as upstream's `ToBudgetAmount`.
+- `MobileReadyToAssignBanner.tsx`: mobile Ready to Assign banner at the top of
+  the budget.
+- `packages/component-library/src/themes/source/fork/contrast.ts`: resolves a
+  token to its hex per theme and measures WCAG contrast.
+- `packages/component-library/src/themes/source/fork/contrast.web.test.ts`:
+  fails if text on a fork-added surface drops below 4.5:1 in any theme.
 
 ## Modified upstream files
 
-| Path                                                                                  | Change                                                                                                   | Why                                                                                                                                |
-| ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `packages/desktop-client/src/hooks/useFeatureFlag.ts`                                 | `goalTemplatesEnabled` and `goalTemplatesUIEnabled` default to `true`                                    | Targets, pill states and the category inspector depend on goal templates. Both can still be turned off in Settings → Experimental. |
-| `packages/desktop-client/package.json`                                                | Two `imports` entries: `#fork/lib/*` and `#fork/*`                                                       | Lets fork code be imported without a per-file alias                                                                                |
-| `packages/component-library/src/themes/source/colors.ts`                              | One block of `available*` tokens after `toBudgetNegative`                                                | Pill background and text colours for all three themes                                                                              |
-| `packages/desktop-client/src/components/budget/envelope/EnvelopeBudgetComponents.tsx` | Expense category balance renders `AvailablePill` instead of `BalanceWithCarryover` (one import, one tag) | Pills on desktop                                                                                                                   |
-| `packages/desktop-client/src/components/budget/tracking/TrackingBudgetComponents.tsx` | Same swap for the tracking budget's balance                                                              | Pills on desktop                                                                                                                   |
-| `packages/desktop-client/src/components/mobile/budget/ExpenseCategoryListItem.tsx`    | Renders `MobileAvailablePill` instead of `BalanceCell`; drops the unused `balance` binding               | Pills on mobile                                                                                                                    |
+Paths are relative to `packages/desktop-client/src/` unless a full path is
+given.
 
-`BalanceWithCarryover.tsx`, `BalanceCell.tsx` and `util.ts` are untouched.
-Income rows and the balance-menu sheet header still use them.
+### Setup
+
+- `hooks/useFeatureFlag.ts`: `goalTemplatesEnabled` and
+  `goalTemplatesUIEnabled` default to `true`. Targets, pill states and the
+  category inspector depend on goal templates. Both can still be turned off in
+  Settings → Experimental.
+- `packages/desktop-client/package.json`: two `imports` entries, `#fork/lib/*`
+  and `#fork/*`, so fork code needs no per-file alias.
+
+### Theme tokens
+
+- `packages/component-library/src/themes/source/colors.ts`: one block of
+  `available*` tokens (pill background and text) and one block of
+  `readyToAssign*` tokens that reference them, both after `toBudgetNegative`.
+
+### Pills
+
+- `components/budget/envelope/EnvelopeBudgetComponents.tsx`: the expense
+  category balance renders `AvailablePill` instead of `BalanceWithCarryover`
+  (one import, one tag).
+- `components/budget/tracking/TrackingBudgetComponents.tsx`: same swap.
+- `components/mobile/budget/ExpenseCategoryListItem.tsx`: renders
+  `MobileAvailablePill` instead of `BalanceCell`; the unused `balance` binding
+  is removed.
+
+`BalanceWithCarryover.tsx` and `BalanceCell.tsx` are untouched. Income rows and
+the balance-menu sheet header still use them.
+
+### Ready to Assign banner
+
+- `components/budget/envelope/budgetsummary/ToBudget.tsx`: renders
+  `ReadyToAssignBanner` instead of `ToBudgetAmount` (one import, one tag, one
+  prop). `ToBudgetAmount.tsx` is untouched and now unused.
+- `components/modals/EnvelopeBudgetSummaryModal.tsx`: same swap.
+- `components/mobile/budget/BudgetPage.tsx`: renders
+  `MobileReadyToAssignBanner` above the banners list.
+- `components/mobile/budget/BudgetTable.tsx`: the header's `ToBudget` cell and
+  its component are removed, since the banner replaces them.
+
+### Wording
+
+One-line string changes: Budgeted → Assigned, Spent → Activity, Balance →
+Available, To Budget → Ready to Assign, overbudgeted → over-assigned.
+
+- `components/budget/envelope/EnvelopeBudgetComponents.tsx`: column titles.
+- `components/mobile/budget/BudgetTable.tsx`: column titles (envelope only).
+- `components/budget/envelope/budgetsummary/TotalsList.tsx`
+- `components/budget/envelope/BalanceMenu.tsx`
+- `components/budget/util.ts`: the category-picker group name.
+- `components/mobile/budget/BudgetMenuSheet.tsx`
+- `components/mobile/budget/BudgetPage.tsx`
+- `components/modals/EnvelopeBudgetSummaryModal.tsx`
+- `components/tour/steps.tsx`
 
 ### Tests
 
-| Path                                                                                       | Change                                                                         | Why                                     |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | --------------------------------------- |
-| `packages/desktop-client/src/components/budget/BalanceWithCarryover.test.tsx`              | Sets `flags.goalTemplatesEnabled` explicitly instead of relying on the default | The default is now `true`               |
-| `packages/desktop-client/src/components/modals/EnvelopeBalanceMenuModal.test.tsx`          | Same                                                                           | Same                                    |
-| `packages/desktop-client/src/components/budget/tracking/TrackingBudgetComponents.test.tsx` | One test asserts the pill's underfunded state instead of the goal ring         | The balance is a pill                   |
-| `packages/desktop-client/src/components/mobile/budget/ExpenseCategoryListItem.test.tsx`    | Button name matched by prefix                                                  | The pill appends its state to the label |
+- `components/budget/BalanceWithCarryover.test.tsx` and
+  `components/modals/EnvelopeBalanceMenuModal.test.tsx`: set
+  `flags.goalTemplatesEnabled` explicitly instead of relying on the default,
+  which is now `true`.
+- `components/budget/tracking/TrackingBudgetComponents.test.tsx`: one test
+  asserts the pill's underfunded state instead of the goal ring.
+- `components/mobile/budget/ExpenseCategoryListItem.test.tsx`: button name
+  matched by prefix, because the pill appends its state to the label.
+- `components/modals/EnvelopeBalanceMenuModal.test.tsx` and
+  `components/budget/envelope/BalanceMovementMenu.test.tsx`: menu item text
+  updated to "Fund target from Ready to Assign".
 
 ## Upstream tests
 

@@ -169,6 +169,18 @@ export const colors = {
   },
   availableZeroText: { light: 'navy600', dark: 'navy200', midnight: 'gray200' },
 
+  // Fork: the Ready to Assign banner follows the pill colours by default
+  readyToAssignPositiveBackground: {
+    all: { ref: 'availableFundedBackground' },
+  },
+  readyToAssignPositiveText: { all: { ref: 'availableFundedText' } },
+  readyToAssignNegativeBackground: {
+    all: { ref: 'availableOverspentBackground' },
+  },
+  readyToAssignNegativeText: { all: { ref: 'availableOverspentText' } },
+  readyToAssignZeroBackground: { all: { ref: 'availableZeroBackground' } },
+  readyToAssignZeroText: { all: { ref: 'availableZeroText' } },
+
   sidebarBackground: { light: 'navy900', dark: 'navy900', midnight: 'gray900' },
   sidebarItemBackgroundPending: { all: 'orange200' },
   sidebarItemBackgroundPositive: {

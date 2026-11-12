@@ -143,7 +143,7 @@ function getBudgetTourSteps({ navigate, budgetType }: TourStepDeps): Step[] {
             ),
           }
         : {
-            title: <Trans>To Budget</Trans>,
+            title: <Trans>Ready to Assign</Trans>,
             content: (
               <Trans>
                 The <strong>To Budget</strong> amount shows the money you have

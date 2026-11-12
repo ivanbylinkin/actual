@@ -11,6 +11,9 @@ const textOnSurfacePairs = [
   ['availableUnderfundedText', 'availableUnderfundedBackground'],
   ['availableOverspentText', 'availableOverspentBackground'],
   ['availableZeroText', 'availableZeroBackground'],
+  ['readyToAssignPositiveText', 'readyToAssignPositiveBackground'],
+  ['readyToAssignNegativeText', 'readyToAssignNegativeBackground'],
+  ['readyToAssignZeroText', 'readyToAssignZeroBackground'],
 ] as const;
 
 describe('contrastRatio', () => {

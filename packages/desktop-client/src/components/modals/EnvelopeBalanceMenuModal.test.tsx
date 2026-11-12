@@ -88,7 +88,7 @@ function renderModal({
   return { onFundGoal };
 }
 
-const fundGoalLabel = 'Fund goal from To Budget';
+const fundGoalLabel = 'Fund target from Ready to Assign';
 
 describe('EnvelopeBalanceMenuModal', () => {
   beforeEach(() => {

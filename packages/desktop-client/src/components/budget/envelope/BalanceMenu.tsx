@@ -94,7 +94,7 @@ export function useBalanceMenu({
       ? [
           {
             name: 'fund-goal',
-            text: t('Fund goal from To Budget'),
+            text: t('Fund target from Ready to Assign'),
           },
         ]
       : []),

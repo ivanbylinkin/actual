@@ -50,6 +50,7 @@ import { prewarmMonth } from '#components/budget/util';
 import { FinancialText } from '#components/FinancialText';
 import { MobilePageHeader, Page } from '#components/Page';
 import { SyncRefresh } from '#components/SyncRefresh';
+import { MobileReadyToAssignBanner } from '#fork/MobileReadyToAssignBanner';
 import { useCategories } from '#hooks/useCategories';
 import { useFeatureFlag } from '#hooks/useFeatureFlag';
 import { useFormat } from '#hooks/useFormat';
@@ -591,6 +592,9 @@ export function BudgetPage() {
         >
           {({ onRefresh }) => (
             <>
+              {budgetType === 'envelope' && (
+                <MobileReadyToAssignBanner onPress={onShowBudgetSummary} />
+              )}
               <Banners month={startMonth} onBudgetAction={onBudgetAction} />
               <BudgetTable
                 // This key forces the whole table rerender when the number
@@ -738,7 +742,7 @@ function OverbudgetedBanner({ month, onBudgetAction, ...props }) {
         modal: {
           name: 'cover',
           options: {
-            title: t('Cover overbudgeted'),
+            title: t('Cover over-assigned'),
             month,
             amount: toBudgetAmount,
             showToBeBudgeted: false,
@@ -749,7 +753,7 @@ function OverbudgetedBanner({ month, onBudgetAction, ...props }) {
                 currencyCode: format.currency.code,
               });
               showUndoNotification({
-                message: t('Covered overbudgeted from {{categoryName}}', {
+                message: t('Covered over-assigned from {{categoryName}}', {
                   categoryName: categoriesById[categoryId].name,
                 }),
               });
@@ -793,7 +797,7 @@ function OverbudgetedBanner({ month, onBudgetAction, ...props }) {
             >
               <SvgArrowButtonDown1 style={{ width: 15, height: 15 }} />
               <Text>
-                <Trans>You have budgeted more than your available funds</Trans>
+                <Trans>You assigned more than you have</Trans>
               </Text>
             </View>
           </View>
@@ -868,7 +872,7 @@ function OverspendingBanner({ month, onBudgetAction, budgetType, ...props }) {
                       toCategoryName: category.name,
                       fromCategoryName:
                         fromCategoryId === 'to-budget'
-                          ? t('To Budget')
+                          ? t('Ready to Assign')
                           : categoriesById[fromCategoryId].name,
                     },
                   ),
