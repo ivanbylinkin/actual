@@ -262,6 +262,20 @@ Available, To Budget → Ready to Assign, overbudgeted → over-assigned.
   `components/budget/envelope/BalanceMovementMenu.test.tsx`: menu item text
   updated to "Fund target from Ready to Assign".
 
+## Deployment
+
+Files added for deployment; none of them changes an upstream file. See
+`DEPLOY.md`.
+
+- `.github/workflows/fork-docker.yml`: builds `sync-server.Dockerfile`, pushes
+  the image to GHCR and triggers the Coolify deploy.
+- `docker-compose.coolify.yml`: the compose file Coolify runs. The development
+  `docker-compose.yml` is untouched.
+- `bin/fork-disable-upstream-workflows`: disables every upstream workflow in
+  the fork through the GitHub API. Upstream's workflow files are left as they
+  are, so they never conflict on a rebase; run the script again after one.
+- `DEPLOY.md`
+
 ## Upstream tests
 
 Upstream's Playwright end-to-end and visual regression suites

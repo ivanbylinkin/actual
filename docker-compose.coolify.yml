@@ -1,0 +1,38 @@
+###################################################
+# Production deployment on Coolify (see DEPLOY.md).
+#
+# Coolify pulls the image that GitHub Actions built
+# (.github/workflows/fork-docker.yml). There is no
+# `build:` key on purpose: the client build needs
+# about 8 GB of memory and must not run on the server.
+#
+# The development compose file is docker-compose.yml.
+###################################################
+
+services:
+  budget:
+    # IMAGE_TAG is unset in normal use, which gives `latest`. To roll back,
+    # set IMAGE_TAG in Coolify to a commit SHA and redeploy.
+    image: ghcr.io/ivanbylinkin/actual:${IMAGE_TAG:-latest}
+    pull_policy: always
+    restart: unless-stopped
+    # Reachable by Coolify's proxy on the Docker network only; no host port
+    # is published.
+    expose:
+      - '5006'
+    volumes:
+      - budget-data:/data
+    healthcheck:
+      # The image has no curl or wget, so the check uses node's fetch.
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:5006/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  budget-data:
