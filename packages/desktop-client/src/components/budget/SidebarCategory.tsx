@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import { Button } from '@actual-app/components/button';
 import { SvgCheveronDown } from '@actual-app/components/icons/v1';
-import { TextOneLine } from '@actual-app/components/text-one-line';
 import { theme } from '@actual-app/components/theme';
 import { View } from '@actual-app/components/view';
 import type {
@@ -15,6 +14,7 @@ import type {
 
 import { InputCell } from '#components/table';
 import { useCategoryInspector } from '#fork/CategoryInspectorContext';
+import { InspectableCategoryName } from '#fork/InspectableCategoryName';
 import { TargetProgressBar } from '#fork/TargetProgressBar';
 import { useContextMenu } from '#hooks/useContextMenu';
 import { useGlobalPref } from '#hooks/useGlobalPref';
@@ -103,7 +103,7 @@ export function SidebarCategory({
       }}
       ref={triggerRef}
     >
-      <TextOneLine data-testid="category-name">{category.name}</TextOneLine>
+      <InspectableCategoryName category={category} canInspect={canInspect} />
       <View style={{ flexShrink: 0, marginLeft: 5 }}>
         <Button
           variant="bare"

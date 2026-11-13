@@ -11,6 +11,7 @@ import type {
 } from '@actual-app/core/types/models';
 
 import type { DropPosition } from '#components/sort';
+import { useInspectorTableSync } from '#fork/lib/useInspectorTableSync';
 import { SchedulesProvider } from '#hooks/useCachedSchedules';
 import { useCategories } from '#hooks/useCategories';
 import { useGlobalPref } from '#hooks/useGlobalPref';
@@ -102,8 +103,17 @@ export function BudgetTable(props: BudgetTableProps) {
     }
   }, []);
 
+  // Fork: the inspector knows the months on screen and follows the cell
+  // being edited
+  const { onEditCell } = useInspectorTableSync({
+    startMonth,
+    numMonths,
+    monthBounds,
+  });
+
   const onEditMonth = (id: string, month: string) => {
     setEditing(id ? { id, cell: month } : null);
+    onEditCell(id, month);
   };
 
   const onEditName = (id: string) => {
