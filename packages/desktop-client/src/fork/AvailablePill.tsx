@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { SvgArrowThinRight } from '@actual-app/components/icons/v1';
+import type { CategoryEntity } from '@actual-app/core/types/models';
 import { css } from '@emotion/css';
 
 import { CellValueText } from '#components/spreadsheet/CellValue';
@@ -13,6 +14,7 @@ import type { AvailableBindings } from '#fork/lib/availableState';
 import { useSheetName } from '#hooks/useSheetName';
 
 type AvailablePillProps = AvailableBindings & {
+  category: Pick<CategoryEntity, 'id' | 'is_income' | 'goal_def'>;
   /** Without a menu behind it the pill is not clickable */
   isDisabled?: boolean;
 };
@@ -22,10 +24,17 @@ type AvailablePillProps = AvailableBindings & {
  * to spend, amber while its target is underfunded, red when overspent and
  * grey when empty. An arrow marks overspending that rolls over.
  */
-export function AvailablePill({ isDisabled, ...bindings }: AvailablePillProps) {
+export function AvailablePill({
+  category,
+  isDisabled,
+  ...bindings
+}: AvailablePillProps) {
   const { t } = useTranslation();
   const { fullSheetName } = useSheetName(bindings.balance);
-  const { state, balanceValue, hasCarryover } = useAvailableState(bindings);
+  const { state, balanceValue, hasCarryover } = useAvailableState(
+    category,
+    bindings,
+  );
 
   return (
     <span
