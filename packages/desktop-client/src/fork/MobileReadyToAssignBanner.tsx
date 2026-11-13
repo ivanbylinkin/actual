@@ -5,15 +5,15 @@ import { SvgCheveronRight } from '@actual-app/components/icons/v1';
 import { Text } from '@actual-app/components/text';
 import { View } from '@actual-app/components/view';
 
-import { useEnvelopeSheetValue } from '#components/budget/envelope/EnvelopeBudgetComponents';
 import { FinancialText } from '#components/FinancialText';
 import { PrivacyFilter } from '#components/PrivacyFilter';
+import { FutureAssignedNote } from '#fork/FutureAssignedNote';
 import {
   getReadyToAssignColors,
   getReadyToAssignState,
 } from '#fork/lib/readyToAssign';
+import { useReadyToAssign } from '#fork/lib/useReadyToAssign';
 import { useFormat } from '#hooks/useFormat';
-import { envelopeBudget } from '#spreadsheet/bindings';
 
 type MobileReadyToAssignBannerProps = {
   /** Opens the budget summary sheet, where the money can be assigned */
@@ -22,14 +22,15 @@ type MobileReadyToAssignBannerProps = {
 
 /**
  * The amount still to be assigned, across the top of the mobile budget. The
- * sign carries the state alongside the colour. Must sit inside the month's
- * `SheetNameProvider`.
+ * sign carries the state alongside the colour. Money already assigned in
+ * later months is taken off, as in YNAB, and named under the label. Must sit
+ * inside the month's `SheetNameProvider`.
  */
 export function MobileReadyToAssignBanner({
   onPress,
 }: MobileReadyToAssignBannerProps) {
   const format = useFormat();
-  const amount = useEnvelopeSheetValue(envelopeBudget.toBudget) ?? 0;
+  const { amount, assignedInFuture } = useReadyToAssign();
   const state = getReadyToAssignState(amount);
 
   return (
@@ -51,17 +52,14 @@ export function MobileReadyToAssignBanner({
           textAlign: 'left',
         }}
       >
-        <Text
-          style={{
-            flex: 1,
-            minWidth: 0,
-            fontSize: 15,
-            fontWeight: 600,
-            whiteSpace: 'nowrap',
-          }}
-        >
-          <Trans>Ready to Assign</Trans>
-        </Text>
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <Text style={{ fontSize: 15, fontWeight: 600, whiteSpace: 'nowrap' }}>
+            <Trans>Ready to Assign</Trans>
+          </Text>
+          {assignedInFuture !== 0 && (
+            <FutureAssignedNote amount={assignedInFuture} />
+          )}
+        </View>
         <PrivacyFilter>
           <FinancialText style={{ fontSize: 22, fontWeight: 700 }}>
             {format(amount, 'financial')}

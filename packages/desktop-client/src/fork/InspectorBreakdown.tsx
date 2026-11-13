@@ -70,6 +70,7 @@ export function InspectorBreakdown({
           <Trans>Available</Trans>
         </Text>
         <AvailablePill
+          category={category}
           isDisabled
           balance={envelopeBudget.catBalance(category.id)}
           carryover={envelopeBudget.catCarryover(category.id)}

@@ -1,6 +1,8 @@
 import type { CategoryEntity } from '@actual-app/core/types/models';
 
 import { getGoalDifference, getGoalProgress } from '#components/budget/util';
+import { acceptsTargets } from '#fork/lib/categoryGoal';
+import { useCategoryGoal } from '#fork/lib/useCategoryGoal';
 import { useFeatureFlag } from '#hooks/useFeatureFlag';
 import { useFormat } from '#hooks/useFormat';
 import { useSheetValue } from '#hooks/useSheetValue';
@@ -47,22 +49,21 @@ export function getCategoryTarget(
 /**
  * A category's target for the month of the surrounding sheet, or null when
  * it has none: no goal template, goal templates turned off, or an income
- * category in an envelope budget.
+ * category in an envelope budget. A month whose templates haven't been
+ * applied yet shows the target they project.
  */
 export function useCategoryTarget(
-  category: Pick<CategoryEntity, 'id' | 'is_income'>,
+  category: Pick<CategoryEntity, 'id' | 'is_income' | 'goal_def'>,
 ): CategoryTarget | null {
   const [budgetType = 'envelope'] = useSyncedPref('budgetType');
   const bindings = budgetType === 'tracking' ? trackingBudget : envelopeBudget;
   const isGoalTemplatesEnabled = useFeatureFlag('goalTemplatesEnabled');
   const { decimalPlaces } = useFormat().currency;
 
-  const goal = useSheetValue<BudgetSheet, 'goal'>(
-    bindings.catGoal(category.id),
-  );
-  const longGoal = useSheetValue<BudgetSheet, 'long-goal'>(
-    bindings.catLongGoal(category.id),
-  );
+  const { goal, longGoal } = useCategoryGoal(category, {
+    goal: bindings.catGoal(category.id),
+    longGoal: bindings.catLongGoal(category.id),
+  });
   const budgeted =
     useSheetValue<BudgetSheet, 'budget'>(bindings.catBudgeted(category.id)) ??
     0;
@@ -73,7 +74,7 @@ export function useCategoryTarget(
   const hasTarget =
     isGoalTemplatesEnabled &&
     goal != null &&
-    !(category.is_income && budgetType !== 'tracking');
+    acceptsTargets(category, budgetType);
   if (!hasTarget) {
     return null;
   }

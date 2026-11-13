@@ -1,7 +1,9 @@
 import { theme } from '@actual-app/components/theme';
+import type { CategoryEntity } from '@actual-app/core/types/models';
 import type { TFunction } from 'i18next';
 
 import { getGoalDifference } from '#components/budget/util';
+import { useCategoryGoal } from '#fork/lib/useCategoryGoal';
 import { useFeatureFlag } from '#hooks/useFeatureFlag';
 import { useFormat } from '#hooks/useFormat';
 import { useSheetValue } from '#hooks/useSheetValue';
@@ -87,20 +89,20 @@ export function getAvailableStateLabel(state: AvailableState, t: TFunction) {
 
 /**
  * Reads a category's balance and target from the budget sheet and works out
- * its pill state. Targets only count while goal templates are enabled.
+ * its pill state. Targets only count while goal templates are enabled; a
+ * month with no stored target uses the one its templates project.
  */
-export function useAvailableState({
-  balance,
-  carryover,
-  goal,
-  budgeted,
-  longGoal,
-}: AvailableBindings) {
+export function useAvailableState(
+  category: Pick<CategoryEntity, 'id' | 'is_income' | 'goal_def'>,
+  { balance, carryover, goal, budgeted, longGoal }: AvailableBindings,
+) {
   const balanceValue = useSheetValue(balance) ?? 0;
   const hasCarryover = !!useSheetValue(carryover);
-  const goalValue = useSheetValue(goal);
+  const { goal: goalValue, longGoal: longGoalValue } = useCategoryGoal(
+    category,
+    { goal, longGoal },
+  );
   const budgetedValue = useSheetValue(budgeted) ?? 0;
-  const longGoalValue = useSheetValue(longGoal);
   const isGoalTemplatesEnabled = useFeatureFlag('goalTemplatesEnabled');
   const { decimalPlaces } = useFormat().currency;
 

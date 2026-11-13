@@ -46,7 +46,7 @@ export function MobileAvailablePill({
   const bindings = budgetType === 'tracking' ? trackingBudget : envelopeBudget;
   const columnWidth = getColumnWidth({ show3Columns });
 
-  const { state, balanceValue, hasCarryover } = useAvailableState({
+  const { state, balanceValue, hasCarryover } = useAvailableState(category, {
     balance: bindings.catBalance(category.id),
     carryover: bindings.catCarryover(category.id),
     goal: bindings.catGoal(category.id),

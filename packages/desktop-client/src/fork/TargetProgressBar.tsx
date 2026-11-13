@@ -9,7 +9,7 @@ import type { CategoryEntity } from '@actual-app/core/types/models';
 import { useCategoryTarget } from '#fork/lib/targetProgress';
 
 type TargetProgressBarProps = {
-  category: Pick<CategoryEntity, 'id' | 'is_income' | 'name'>;
+  category: Pick<CategoryEntity, 'id' | 'is_income' | 'name' | 'goal_def'>;
   height?: number;
   style?: CSSProperties;
 };

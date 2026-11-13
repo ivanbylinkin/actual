@@ -1,14 +1,13 @@
 import { Trans, useTranslation } from 'react-i18next';
 
-import { Button } from '@actual-app/components/button';
 import { Text } from '@actual-app/components/text';
 import { theme } from '@actual-app/components/theme';
 import { View } from '@actual-app/components/view';
 import * as monthUtils from '@actual-app/core/shared/months';
 import type { CategoryEntity } from '@actual-app/core/types/models';
 
-import { FinancialText } from '#components/FinancialText';
-import { PrivacyFilter } from '#components/PrivacyFilter';
+import { InspectorOptionList } from '#fork/InspectorOptionList';
+import type { InspectorOption } from '#fork/InspectorOptionList';
 import { InspectorSection } from '#fork/InspectorSection';
 import {
   getAverageAmount,
@@ -17,7 +16,6 @@ import {
 } from '#fork/lib/quickAssign';
 import { useCategoryTarget } from '#fork/lib/targetProgress';
 import { useMonthSheetValue } from '#fork/lib/useMonthSheetValue';
-import { useFormat } from '#hooks/useFormat';
 import { useUndo } from '#hooks/useUndo';
 import { envelopeBudget } from '#spreadsheet/bindings';
 
@@ -26,17 +24,6 @@ type InspectorQuickAssignProps = {
   month: string;
   onBudgetAction: (month: string, action: string, args?: unknown) => void;
   isTouch?: boolean;
-};
-
-type QuickAssignOption = {
-  key: string;
-  label: string;
-  /**
-   * What will be assigned, shown beside the label: null while it loads,
-   * undefined when Actual works it out and it isn't known beforehand
-   */
-  amount?: number | null;
-  onPress: () => void;
 };
 
 /**
@@ -52,7 +39,6 @@ export function InspectorQuickAssign({
   isTouch = false,
 }: InspectorQuickAssignProps) {
   const { t } = useTranslation();
-  const format = useFormat();
   const { showUndoNotification } = useUndo();
   const target = useCategoryTarget(category);
 
@@ -88,7 +74,7 @@ export function InspectorQuickAssign({
     showUndoNotification({ message });
   };
 
-  const options: QuickAssignOption[] = [
+  const options: InspectorOption[] = [
     {
       key: 'assigned-last-month',
       label: t('Assigned last month'),
@@ -133,38 +119,12 @@ export function InspectorQuickAssign({
 
   return (
     <InspectorSection title={<Trans>Quick assign</Trans>}>
-      <View
-        style={{
-          margin: '0 -16px -16px',
-          borderTop: `1px solid ${theme.tableBorder}`,
-        }}
-      >
-        {options.map(option => (
-          <Button
-            key={option.key}
-            variant="bare"
-            data-quick-assign={option.key}
-            isDisabled={option.amount === null}
-            onPress={option.onPress}
-            style={{
-              justifyContent: 'space-between',
-              gap: 12,
-              minHeight: isTouch ? 44 : 34,
-              padding: '0 16px',
-              borderRadius: 0,
-              borderBottom: `1px solid ${theme.tableBorder}`,
-            }}
-          >
-            <Text style={{ textAlign: 'left' }}>{option.label}</Text>
-            {option.amount != null && (
-              <PrivacyFilter>
-                <FinancialText style={{ whiteSpace: 'nowrap' }}>
-                  {format(option.amount, 'financial')}
-                </FinancialText>
-              </PrivacyFilter>
-            )}
-          </Button>
-        ))}
+      <View style={{ marginBottom: -16 }}>
+        <InspectorOptionList
+          options={options}
+          dataAttribute="data-quick-assign"
+          isTouch={isTouch}
+        />
       </View>
       <Text
         style={{
