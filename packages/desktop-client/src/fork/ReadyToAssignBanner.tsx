@@ -7,19 +7,16 @@ import { Tooltip } from '@actual-app/components/tooltip';
 import { View } from '@actual-app/components/view';
 
 import { TotalsList } from '#components/budget/envelope/budgetsummary/TotalsList';
-import {
-  useEnvelopeSheetName,
-  useEnvelopeSheetValue,
-} from '#components/budget/envelope/EnvelopeBudgetComponents';
 import { FinancialText } from '#components/FinancialText';
 import { PrivacyFilter } from '#components/PrivacyFilter';
+import { FutureAssignedNote } from '#fork/FutureAssignedNote';
 import {
   getReadyToAssignColors,
   getReadyToAssignState,
   getReadyToAssignStatus,
 } from '#fork/lib/readyToAssign';
+import { useReadyToAssign } from '#fork/lib/useReadyToAssign';
 import { useFormat } from '#hooks/useFormat';
-import { envelopeBudget } from '#spreadsheet/bindings';
 
 type ReadyToAssignBannerProps = {
   prevMonthName: string;
@@ -36,7 +33,9 @@ type ReadyToAssignBannerProps = {
 /**
  * The amount still to be assigned, as a filled banner: green when there is
  * money waiting, red when more is assigned than there is, grey at zero.
- * Takes the same props as upstream's `ToBudgetAmount`.
+ * Money already assigned in later months is taken off, as in YNAB, and
+ * named under the amount. Takes the same props as upstream's
+ * `ToBudgetAmount`.
  */
 export function ReadyToAssignBanner({
   prevMonthName,
@@ -48,15 +47,14 @@ export function ReadyToAssignBanner({
 }: ReadyToAssignBannerProps) {
   const { t } = useTranslation();
   const format = useFormat();
-  const { fullSheetName } = useEnvelopeSheetName(envelopeBudget.toBudget);
-  const amount = useEnvelopeSheetValue(envelopeBudget.toBudget) ?? 0;
+  const { amount, assignedInFuture, cellName } = useReadyToAssign();
   const state = getReadyToAssignState(amount);
 
   const content = (
     <>
       <PrivacyFilter>
         <FinancialText
-          data-cellname={fullSheetName}
+          data-cellname={cellName}
           style={{ fontSize: isCompact ? 17 : 26, fontWeight: 700 }}
         >
           {format(amount, 'financial')}
@@ -70,6 +68,12 @@ export function ReadyToAssignBanner({
           <Text style={{ fontSize: 12 }}>
             {getReadyToAssignStatus(state, t)}
           </Text>
+        )}
+        {!isCompact && assignedInFuture !== 0 && (
+          <FutureAssignedNote
+            amount={assignedInFuture}
+            style={{ justifyContent: 'center' }}
+          />
         )}
       </View>
     </>
@@ -93,7 +97,15 @@ export function ReadyToAssignBanner({
     >
       <Tooltip
         content={
-          <TotalsList prevMonthName={prevMonthName} style={{ padding: 7 }} />
+          <View style={{ padding: 7 }}>
+            <TotalsList prevMonthName={prevMonthName} />
+            {assignedInFuture !== 0 && (
+              <FutureAssignedNote
+                amount={assignedInFuture}
+                style={{ justifyContent: 'center', marginTop: 4 }}
+              />
+            )}
+          </View>
         }
         placement="bottom"
         offset={3}

@@ -14,6 +14,7 @@ import { TotalsList } from '#components/budget/envelope/budgetsummary/TotalsList
 import { useEnvelopeSheetValue } from '#components/budget/envelope/EnvelopeBudgetComponents';
 import { ToBudgetSheetActions } from '#components/mobile/budget/ToBudgetSheetActions';
 import { MobileSheet } from '#components/mobile/MobileSheet';
+import { useReadyToAssign } from '#fork/lib/useReadyToAssign';
 import { ReadyToAssignBanner } from '#fork/ReadyToAssignBanner';
 import { useCategoriesById } from '#hooks/useCategories';
 import { useFormat } from '#hooks/useFormat';
@@ -45,6 +46,9 @@ export function EnvelopeBudgetSummaryModal({
       value: 0,
     }) ?? 0;
 
+  // Fork: moving money offers what is left once later months are covered
+  const { amount: readyToAssign } = useReadyToAssign();
+
   const { showUndoNotification } = useUndo();
   const {
     data: { list: categoriesById } = {
@@ -60,7 +64,7 @@ export function EnvelopeBudgetSummaryModal({
           options: {
             title: t('Transfer to category'),
             month,
-            amount: sheetValue,
+            amount: Math.max(0, readyToAssign),
             onSubmit: (amount, toCategoryId) => {
               void onBudgetAction(month, 'transfer-available', {
                 amount,

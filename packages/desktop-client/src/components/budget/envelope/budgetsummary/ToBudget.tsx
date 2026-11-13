@@ -8,6 +8,7 @@ import { CoverMenu } from '#components/budget/envelope/CoverMenu';
 import { useEnvelopeSheetValue } from '#components/budget/envelope/EnvelopeBudgetComponents';
 import { HoldMenu } from '#components/budget/envelope/HoldMenu';
 import { TransferMenu } from '#components/budget/envelope/TransferMenu';
+import { useReadyToAssign } from '#fork/lib/useReadyToAssign';
 import { ReadyToAssignBanner } from '#fork/ReadyToAssignBanner';
 import { useFormat } from '#hooks/useFormat';
 import { envelopeBudget } from '#spreadsheet/bindings';
@@ -51,6 +52,9 @@ export function ToBudget({
       'Expected availableValue to be a number but got ' + availableValue,
     );
   }
+
+  // Fork: moving money offers what is left once later months are covered
+  const { amount: readyToAssign } = useReadyToAssign();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [position, setPosition] = useState({ crossOffset: 0, offset: 0 });
@@ -122,7 +126,7 @@ export function ToBudget({
           )}
           {menuStep === 'transfer' && (
             <TransferMenu
-              initialAmount={availableValue}
+              initialAmount={Math.max(0, readyToAssign)}
               onClose={closeMenu}
               onSubmit={(amount, categoryId) => {
                 onBudgetAction(month, 'transfer-available', {
